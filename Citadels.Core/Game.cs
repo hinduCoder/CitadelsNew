@@ -2,10 +2,14 @@
 
 public class Game
 {
-    public GameStatus Status { get; private set; } = GameStatus.NotStarted;
+    private List<Player> _players = new ();
 
-    internal void StartGame()
+    public GameStatus Status { get; private set; } = GameStatus.NotStarted;
+    public IReadOnlyList<Player> Players => _players;
+
+    internal void StartGame(IEnumerable<Player> players)
     {
+        _players.AddRange(players);
         Status = GameStatus.Draft;
         //TODO launch draft;
     }
