@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citadels.Core", "Citadels.Core\Citadels.Core.csproj", "{C5523EF3-B812-41C7-83DC-BF5D6F7A94BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citadels.Utils", "Citadels.Utils\Citadels.Utils.csproj", "{1E4F7FA9-CD35-480B-B3A6-715E9398B334}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C5523EF3-B812-41C7-83DC-BF5D6F7A94BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5523EF3-B812-41C7-83DC-BF5D6F7A94BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5523EF3-B812-41C7-83DC-BF5D6F7A94BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5523EF3-B812-41C7-83DC-BF5D6F7A94BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E4F7FA9-CD35-480B-B3A6-715E9398B334}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E4F7FA9-CD35-480B-B3A6-715E9398B334}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E4F7FA9-CD35-480B-B3A6-715E9398B334}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E4F7FA9-CD35-480B-B3A6-715E9398B334}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {72A66E9B-783A-48FF-81A3-89830640D7B9}
+	EndGlobalSection
+EndGlobal
