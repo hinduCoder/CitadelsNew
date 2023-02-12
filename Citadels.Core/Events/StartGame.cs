@@ -14,6 +14,4 @@ public class StartGame : IGameEvent
     }
 
     public bool IsValid(Game game) => game.Status == GameStatus.NotStarted;
-
-    public void Undo(Game game) => throw new NotImplementedException();
 }
