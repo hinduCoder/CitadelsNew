@@ -15,10 +15,11 @@ Debugger.Break();
 
 static IEnumerable<IGameEvent> GetEvents()
 {
-    var startGameEvent = new StartGame(Enumerable.Range(1, 4).Select(i => i.ToString()));
+    var playersCount = 7;
+    var startGameEvent = new StartGame(Enumerable.Range(1, playersCount).Select(i => i.ToString()));
     yield return startGameEvent;
     yield return new DiscardDraftFirstCards();
-    foreach (var @char in startGameEvent.RandomizedCharacters.Skip(3).Take(4))
+    foreach (var @char in startGameEvent.RandomizedCharacters.Skip(Math.Max(7 - playersCount, 1)).Take(playersCount))
     {
         yield return new ChooseCharacter(@char.Rank);
     }

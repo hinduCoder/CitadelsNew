@@ -25,5 +25,8 @@ public class StartGame : IGameEvent
         game.StartGame(_playersNames.Select(name => new Player(name)), RandomizedCharacters);
     }
 
-    public bool IsValid(Game game) => game.Status == GameStatus.NotStarted;
+    public bool IsValid(Game game) 
+        => game.Status == GameStatus.NotStarted
+        && _playersNames.Count <= 7
+        && _playersNames.Count >= 4; //special rules for two or three players are not going to be supported at first stage though we can allow to play them by regular rules
 }

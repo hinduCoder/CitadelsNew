@@ -4,6 +4,8 @@ namespace Citadels.Core;
 
 public class Draft
 {
+    private const int MaximumPlayersCount = 7;
+
     private readonly List<Character> _characters = new();
     private readonly List<Character> _openDiscardedCharacters = new();
 
@@ -50,5 +52,11 @@ public class Draft
         }
         _players[_currentPlayerIndex++].CurrentCharacter = character;
         _characters.Remove(character);
+
+        if (PlayersCount == MaximumPlayersCount && _currentPlayerIndex == MaximumPlayersCount - 1)
+        {
+            _characters.Add(ClosedDiscardedCharacter!);
+            ClosedDiscardedCharacter = null;
+        }
     }
 }
