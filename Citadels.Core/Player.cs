@@ -32,6 +32,8 @@ public class Player
         _coins = 2;
     }
 
+    public override string ToString() => Name;
+
     internal void AddDistricts(IEnumerable<District> districts)
     {
         foreach (var district in districts)
