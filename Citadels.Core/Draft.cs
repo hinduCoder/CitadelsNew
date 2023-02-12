@@ -23,6 +23,11 @@ public class Draft
     public Draft(IEnumerable<Character> randomizedCharacters, IReadOnlyList<Player> players, int firstPlayer)
     {
         _characters.AddRange(randomizedCharacters);
+        
+        //The King can't be in opened discarded. Ensure it by making it last, then will be sorted anyway
+        var king = _characters.Find(x => x.Rank == 4)!; //Kind. TODO make constants
+        _characters.Remove(king);
+        _characters.Add(king);
 
         _players.AddRange(players.Skip(firstPlayer));
         _players.AddRange(players.Take(players.Count - PlayersCount));
