@@ -2,7 +2,7 @@
 
 public static class ListExtensions
 {
-    private static Random _rng = new ();
+    private static readonly Random _rng = new ();
 
     public static IList<T> Shuffle<T>(this IList<T> list)
     {
@@ -11,9 +11,7 @@ public static class ListExtensions
         {
             n--;
             int k = _rng.Next(n + 1);
-            var value = list[k];
-            list[k] = list[n];
-            list[n] = value;
+            (list[n], list[k]) = (list[k], list[n]);
         }
         return list;
     }
