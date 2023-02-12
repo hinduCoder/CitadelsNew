@@ -12,7 +12,7 @@ public class Draft
 
     public int PlayersCount => _players.Count;
     public bool Started => _currentPlayerIndex != 0 || ClosedDiscardedCharacter != null;
-    public bool Completed => _currentPlayerIndex == _players.Count - 1;
+    public bool Completed => _currentPlayerIndex == _players.Count;
     public IReadOnlyList<Character> AvailableCharacters => _characters;
     public IReadOnlyList<Character> OpenDiscardedCharacters => _openDiscardedCharacters;
     public Character? ClosedDiscardedCharacter { get; private set; }
@@ -39,5 +39,16 @@ public class Draft
         _characters.RemoveAt(0);
 
         _characters.Sort();
+    }
+
+    public void ChooseCharacterForCurrentPlayer(int rank)
+    {
+        var character = _characters.Find(x => x.Rank == rank);
+        if (character is null)
+        {
+            throw new InvalidOperationException();
+        }
+        _players[_currentPlayerIndex++].CurrentCharacter = character;
+        _characters.Remove(character);
     }
 }
