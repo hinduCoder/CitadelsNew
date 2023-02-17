@@ -16,7 +16,7 @@ public class Turn
 
     public IReadOnlyList<District> DistrictsForChoose => _districtsForChoose;
     public bool GatherActionAvailable => !GatherActionDone && !GatherActionInProgress;
-    public bool CanBuild => DistrictBuiltCount < Player.CurrentCharacter.DistrictMaxBuildCount;
+    public bool CanBuild => GatherActionDone && DistrictBuiltCount < Player.CurrentCharacter.DistrictMaxBuildCount;
 
     internal Turn(Game game, Player player)
     {
@@ -43,7 +43,7 @@ public class Turn
             throw new ArgumentException("District is not in the allowed list", nameof(district));
         }
 
-        Player.AddDistrict(district);
+        Player.AddDistricts(district);
         GatherActionInProgress = false;
         GatherActionDone = true;
     }
