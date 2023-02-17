@@ -34,6 +34,7 @@ public class Player
         {
             throw new ArgumentException("The player doesn't have such district", nameof(district));
         }
+        Coins -= district.BuildPrice;
         _builtDistricts.Add(district);
     }
 }
