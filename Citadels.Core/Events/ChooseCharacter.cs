@@ -15,9 +15,12 @@ public class ChooseCharacter : IGameEvent
 
     public bool IsValid(Game game)
     {
+        if (game.Status != GameStatus.Draft)
+        {
+            return false;
+        }
         var draft = game.Draft;
-        return game.Status == GameStatus.Draft
-                && draft.Started
+        return draft.Started
                 && !draft.Completed
                 && draft.AvailableCharacters.Any(x => x.Rank == SelectedCharacterRank);
     }
