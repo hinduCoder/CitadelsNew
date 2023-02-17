@@ -2,7 +2,6 @@
 
 namespace Citadels.Core.Characters;
 
-//Old copy
 public abstract class Character : IComparable<Character>, IEquatable<Character>
 { 
     public static readonly Character[] Pool;
@@ -15,7 +14,7 @@ public abstract class Character : IComparable<Character>, IEquatable<Character>
     public virtual int DistrictMaxBuildCount { get; } = 1;
     public virtual bool CanDistrictsBeDesctroyed { get; } = true;
 
-    public bool IsAlive { get; internal set; } = true;
+    public bool Is<TCharacter>() where TCharacter: Character => this is TCharacter;
 
     public override string ToString()
     {
