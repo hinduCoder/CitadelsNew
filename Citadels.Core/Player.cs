@@ -27,7 +27,9 @@ public class Player
 
     public override string ToString() => Name;
 
-    internal void AddDistrict(District district) => _districts.Add(district);
+    internal void AddDistricts(params District[] districts) => AddDistricts(districts.AsEnumerable());
+    internal void AddDistricts(IEnumerable<District> districts) => _districts.AddRange(districts);
+
     internal void BuildDistrict(District district)
     {
         if (!_districts.Remove(district))

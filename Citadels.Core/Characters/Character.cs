@@ -14,6 +14,8 @@ public abstract class Character : IComparable<Character>, IEquatable<Character>
     public virtual int DistrictMaxBuildCount { get; } = 1;
     public virtual bool CanDistrictsBeDesctroyed { get; } = true;
 
+    public string Name => ToString();
+
     public bool Is<TCharacter>() where TCharacter: Character => this is TCharacter;
 
     public override string ToString()

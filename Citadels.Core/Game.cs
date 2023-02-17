@@ -31,6 +31,10 @@ public class Game
 
     internal void StartRound()
     {
+        foreach (var player in Players)
+        {
+            player.AddDistricts(DistrictDeck.Take(4));
+        }
         CurrentRound = new Round(this);
         Status = GameStatus.Round;
     }
