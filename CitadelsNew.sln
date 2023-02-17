@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Citadels.Core", "Citadels.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Citadels.Utils", "Citadels.Utils\Citadels.Utils.csproj", "{1E4F7FA9-CD35-480B-B3A6-715E9398B334}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Citadels.TestClient", "Citadels.TestClient\Citadels.TestClient.csproj", "{76A223F0-E63E-4685-9D28-ABD74554728E}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{1E4F7FA9-CD35-480B-B3A6-715E9398B334}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E4F7FA9-CD35-480B-B3A6-715E9398B334}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E4F7FA9-CD35-480B-B3A6-715E9398B334}.Release|Any CPU.Build.0 = Release|Any CPU
-		{76A223F0-E63E-4685-9D28-ABD74554728E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{76A223F0-E63E-4685-9D28-ABD74554728E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{76A223F0-E63E-4685-9D28-ABD74554728E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{76A223F0-E63E-4685-9D28-ABD74554728E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -361,4 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-/Citadels.TestWebApiClient
+
+#Ignore test projects
+/Citadels.Test*/
