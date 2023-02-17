@@ -1,6 +1,6 @@
 ﻿namespace Citadels.Core.Districts;
 
-public class District
+public class District : IEquatable<District>
 {
     #region raw list
     private static readonly string RawList = 
@@ -26,12 +26,14 @@ public class District
 1 Laboratory 5 purple
 1 Smithy 5 purple
 1 Graveyard 5 purple
-1 Observatory 5 purple
+1 Observatory 4 purple
 1 School of Magic 6 purple
 1 Library 6 purple
 1 Great Wall 6 purple
-1 University 8 purple
-1 Dragon Gate 8 purple";
+1 University 6 purple
+1 Dragon Gate 6 purple
+1 Imperial Treasure 5 purple
+1 Map Room 5 purple";
     #endregion
     static District()
     {
@@ -64,6 +66,13 @@ public class District
     public int BuildPrice { get; private set; }
     public string Name { get; private set; }
     public DistrictKind Kind { get; private set; }
+
+    public bool Equals(District? other) => other?.Name == Name && other?.Kind == Kind;
+
+    public override bool Equals(object? obj) => Equals(obj as District);
+
+    public override int GetHashCode() => HashCode.Combine(Name, Kind);
+
 
     private District(string name, DistrictKind kind, int buildPrice)
     {
