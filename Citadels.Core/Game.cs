@@ -14,6 +14,8 @@ public class Game
     [AllowNull]
     public Draft Draft { get; private set; }
     [AllowNull]
+    public Round CurrentRound { get; set; }
+    [AllowNull]
     internal Deck<District> DistrictDeck { get; private set; }
 
     internal void StartGame(IEnumerable<Player> players, 
@@ -27,3 +29,9 @@ public class Game
         Status = GameStatus.Draft;
     }
 
+    internal void StartRound()
+    {
+        CurrentRound = new Round(this);
+        Status = GameStatus.Round;
+    }
+}
