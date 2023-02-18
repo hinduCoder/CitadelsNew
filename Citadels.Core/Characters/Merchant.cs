@@ -6,7 +6,9 @@ namespace Citadels.Core.Characters;
 public class Merchant : Character
 {
     public override int Rank => CharacterRanks.Merchant;
-    internal override IReadOnlyCollection<ISimpleAction> AutomaticActions { get; } = new[] { new MerchantFreeCoinAction() };
-    internal override IReadOnlyCollection<IPossibleAction> AvailableActions { get; }
-        = new[] { PossibleAction<GatherCoinsFromBuiltDistrictsAction>.Create() };
+    protected Merchant()
+    {
+        RegisterAutomaticActions(new MerchantFreeCoinAction());
+        RegisterPossibleActions(PossibleAction<GatherCoinsFromBuiltDistrictsAction>.Create(obligatory: true));
+    }
 }

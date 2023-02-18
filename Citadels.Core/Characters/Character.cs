@@ -11,8 +11,11 @@ public abstract class Character : IComparable<Character>, IEquatable<Character>
         var characterTypes = Assembly.GetExecutingAssembly().DefinedTypes.Where(x => x.BaseType == typeof(Character)).ToList();
         Pool = characterTypes.Select(characterType => (Character)Activator.CreateInstance(characterType)!).OrderBy(x => x.Rank).ToArray();
     }
-    internal virtual IReadOnlyCollection<IPossibleAction> AvailableActions { get; } = Array.Empty<IPossibleAction>();
-    internal virtual IReadOnlyCollection<ISimpleAction> AutomaticActions { get; } = Array.Empty<ISimpleAction>();
+
+    private protected List<IPossibleAction> _availableActions = new();
+    private protected List<ISimpleAction> _automaticActions = new();
+    internal IReadOnlyCollection<IPossibleAction> AvailableActions => _availableActions;
+    internal IReadOnlyCollection<ISimpleAction> AutomaticActions => _automaticActions;
 
     public abstract int Rank { get; }
     public virtual int DistrictMaxBuildCount { get; } = 1;
@@ -49,4 +52,10 @@ public abstract class Character : IComparable<Character>, IEquatable<Character>
     }
 
     public override int GetHashCode() => Rank;
+
+    private protected void RegisterAutomaticActions(params ISimpleAction[] actions)
+        => _automaticActions.AddRange(actions);
+
+    private protected void RegisterPossibleActions(params IPossibleAction[] possibleActions)
+        => _availableActions.AddRange(possibleActions);
 }

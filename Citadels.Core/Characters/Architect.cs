@@ -7,6 +7,8 @@ public class Architect : Character
 {
     public override int Rank => CharacterRanks.Architect;
     public override int DistrictMaxBuildCount => 3;
-    internal override IReadOnlyCollection<ISimpleAction> AutomaticActions { get; } = new[] { new ArchitechFreeDistrictsAction() };
-
+    public Architect()
+    {
+        RegisterAutomaticActions(new ArchitechFreeDistrictsAction());
+    }
 }

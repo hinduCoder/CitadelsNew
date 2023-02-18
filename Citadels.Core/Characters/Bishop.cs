@@ -7,6 +7,8 @@ public class Bishop : Character
 {
     public override int Rank => CharacterRanks.Bishop;
     public override bool CanDistrictsBeDesctroyed => false;
-    internal override IReadOnlyCollection<IPossibleAction> AvailableActions { get; }
-        = new[] { PossibleAction<GatherCoinsFromBuiltDistrictsAction>.Create() };
+    protected Bishop()
+    {
+        RegisterPossibleActions(PossibleAction<GatherCoinsFromBuiltDistrictsAction>.Create(obligatory: true));
+    }
 }
