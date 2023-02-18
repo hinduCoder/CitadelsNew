@@ -29,8 +29,11 @@ public class Turn
         {
             action.Execute(game);
         }
-
         TurnActionPool = new TurnActionPool(player.CurrentCharacter.AvailableActions);
+    }
+
+    internal void End()
+    {
     }
 
     internal void GatherCoins()

@@ -1,11 +1,13 @@
-﻿using Citadels.Core.Actions.CharacterActions;
+﻿using Citadels.Core.Actions.CharacterAction;
+using Citadels.Core.Actions.CharacterActions;
 
 namespace Citadels.Core.Actions;
 
 internal static class ActionPool
 {
     internal static KillAction Kill = new ();
-    internal static ISimpleAction TakeCrown = new KingCrownTake();
-    internal static ISimpleAction MerchantFreeCoin = new MerchantFreeCoin();
-    internal static ISimpleAction ArchitechFreeDistricts = new ArchitechFreeDistricts();
+    internal static StealAction Steal= new ();
+    internal static KingCrownTake TakeCrown = new();
+    internal static MerchantFreeCoin MerchantFreeCoin = new();
+    internal static ArchitechFreeDistricts ArchitechFreeDistricts = new();
 }

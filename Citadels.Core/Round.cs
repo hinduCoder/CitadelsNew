@@ -12,6 +12,8 @@ public class Round
 
     public Turn CurrentTurn { get; private set; }
 
+    internal event Action<Player, Character>? CharacterRevealEvent; 
+
     internal Round(Game game)
     {
         _game = game;
@@ -23,11 +25,20 @@ public class Round
     [MemberNotNull(nameof(CurrentTurn))]
     internal void NewTurn()
     {
+        CurrentTurn?.End();
+
         Player player;
         do
         {
             player = _playersOrder[_turnNumber++].Player;
         } while (!player.IsAlive);
+        CharacterRevealEvent?.Invoke(player, player.CurrentCharacter);
+
         CurrentTurn = new Turn(_game, player);
+    }
+
+    internal void End()
+    {
+        CharacterRevealEvent = null;
     }
 }
