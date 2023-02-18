@@ -7,5 +7,8 @@ public class Warlord : Character
 {
     public override int Rank => CharacterRanks.Warlord;
     internal override IReadOnlyCollection<IPossibleAction> AvailableActions { get; }
-        = new[] { new PossibleAction<GatherCoinsFromBuiltDistrictsAction>(ActionPool.GatherCoinsFromBuiltDistricts) };
+        = new IPossibleAction[] { 
+            new PossibleAction<GatherCoinsFromBuiltDistrictsAction>(ActionPool.GatherCoinsFromBuiltDistricts),
+            new PossibleAction<DestroyDistrictAction>(ActionPool.DestroyDistrict) 
+        };
 }

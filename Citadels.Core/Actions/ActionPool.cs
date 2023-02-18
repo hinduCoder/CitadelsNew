@@ -10,6 +10,7 @@ internal static class ActionPool
     internal static ExchangeCardsWithDeckAction ExchangeCardsWithDeck = new();
     internal static ExchangeCardsWithPlayerAction ExchangeCardsWithPlayer = new();
     internal static GatherCoinsFromBuiltDistrictsAction GatherCoinsFromBuiltDistricts = new();
+    internal static DestroyDistrictAction DestroyDistrict = new();
     internal static KingCrownTakeAction TakeCrown = new();
     internal static MerchantFreeCoinAction MerchantFreeCoin = new();
     internal static ArchitechFreeDistrictsAction ArchitechFreeDistricts = new();

@@ -48,4 +48,9 @@ public class Player
         Coins -= district.BuildPrice;
         _builtDistricts.Add(district);
     }
+
+    internal void DestroyDistrict(District district)
+    {
+        _builtDistricts.Remove(district);
+    }
 }
