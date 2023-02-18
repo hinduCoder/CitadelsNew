@@ -7,7 +7,7 @@ namespace Citadels.Core;
 public class Round
 {
     private readonly Game _game;
-    private readonly List<(Character Character, Player Player)> _playersOrder = new();
+    private readonly List<Player> _playersOrder = new();
     private int _turnNumber = 0;
 
     public Turn CurrentTurn { get; private set; }
@@ -17,8 +17,8 @@ public class Round
     internal Round(Game game)
     {
         _game = game;
-        _playersOrder.AddRange(_game.Players.Select(x => (Character: x.CurrentCharacter!, x)).OrderBy(x => x.Character));
-        _playersOrder.ForEach(x => x.Player.IsAlive = true);
+        _playersOrder.AddRange(_game.Players.OrderBy(x => x.CurrentCharacter));
+        _playersOrder.ForEach(x => x.IsAlive = true);
         NewTurn();
     }
 
@@ -30,7 +30,7 @@ public class Round
         Player player;
         do
         {
-            player = _playersOrder[_turnNumber++].Player;
+            player = _playersOrder[_turnNumber++];
         } while (!player.IsAlive);
         CharacterRevealEvent?.Invoke(player, player.CurrentCharacter);
 
@@ -40,5 +40,10 @@ public class Round
     internal void End()
     {
         CharacterRevealEvent = null;
+        var playerWithKing = _playersOrder.SingleOrDefault(x => x.CurrentCharacter.Is<King>());
+        if (playerWithKing is not null)
+        {
+            _game.SetCrownOwner(playerWithKing);
+        }
     }
 }
