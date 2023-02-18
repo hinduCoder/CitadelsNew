@@ -13,7 +13,7 @@ public class ExchangeCardsWithPlayer : IGameEvent
     }
     public void Handle(Game game)
     {
-        game.CurrentTurn.ExecuteAction(ActionPool.ExchangeCardsWithPlayer, game.Players.Single(x => x.Name == VictimName));
+        game.CurrentTurn.ExecuteAction(new ExchangeCardsWithPlayerAction(), game.Players.Single(x => x.Name == VictimName));
     }
 
     public bool IsValid(Game game)

@@ -8,7 +8,7 @@ internal class GatherCoinsFromBuiltDistricts : IGameEvent
 {
     public void Handle(Game game)
     {
-        game.CurrentTurn.ExecuteAction(ActionPool.GatherCoinsFromBuiltDistricts);
+        game.CurrentTurn.ExecuteAction(new GatherCoinsFromBuiltDistrictsAction());
     }
 
     public bool IsValid(Game game) 

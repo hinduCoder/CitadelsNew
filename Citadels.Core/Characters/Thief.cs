@@ -6,5 +6,5 @@ namespace Citadels.Core.Characters;
 public class Thief : Character
 {
     public override int Rank => CharacterRanks.Thief;
-    internal override IReadOnlyCollection<IPossibleAction> AvailableActions { get; } = new [] { new PossibleAction<StealAction>(ActionPool.Steal) };
+    internal override IReadOnlyCollection<IPossibleAction> AvailableActions { get; } = new [] { PossibleAction<StealAction>.Create() };
 }

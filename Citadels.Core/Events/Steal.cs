@@ -16,7 +16,7 @@ public class Steal : IGameEvent
 
     public void Handle(Game game)
     {
-        game.CurrentTurn.ExecuteAction(ActionPool.Steal, Victim);
+        game.CurrentTurn.ExecuteAction(new StealAction(), Victim);
     }
 
     public bool IsValid(Game game)

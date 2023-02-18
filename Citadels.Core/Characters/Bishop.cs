@@ -8,5 +8,5 @@ public class Bishop : Character
     public override int Rank => CharacterRanks.Bishop;
     public override bool CanDistrictsBeDesctroyed => false;
     internal override IReadOnlyCollection<IPossibleAction> AvailableActions { get; }
-        = new[] { new PossibleAction<GatherCoinsFromBuiltDistrictsAction>(ActionPool.GatherCoinsFromBuiltDistricts) };
+        = new[] { PossibleAction<GatherCoinsFromBuiltDistrictsAction>.Create() };
 }

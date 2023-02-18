@@ -15,7 +15,7 @@ public class Kill : IGameEvent
 
     public void Handle(Game game)
     {
-        game.CurrentTurn.ExecuteAction(ActionPool.Kill, Victim);
+        game.CurrentTurn.ExecuteAction(new KillAction(), Victim);
     }
 
     public bool IsValid(Game game)

@@ -1,5 +1,4 @@
-﻿using Citadels.Core.Actions;
-using Citadels.Core.Actions.CharacterActions;
+﻿using Citadels.Core.Actions.CharacterActions;
 
 namespace Citadels.Core.Events;
 
@@ -13,7 +12,7 @@ public class ExchangeCardsWithDeck : IGameEvent
     }
     public void Handle(Game game)
     {
-        game.CurrentTurn.ExecuteAction(ActionPool.ExchangeCardsWithDeck, Count);
+        game.CurrentTurn.ExecuteAction(new ExchangeCardsWithDeckAction(), Count);
     }
 
     public bool IsValid(Game game)

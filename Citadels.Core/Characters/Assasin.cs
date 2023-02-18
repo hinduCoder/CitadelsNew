@@ -7,5 +7,5 @@ public class Assasin : Character
 {
     public override int Rank => CharacterRanks.Assasin;
 
-    internal override IReadOnlyCollection<IPossibleAction> AvailableActions => new[] { new PossibleAction<KillAction>(ActionPool.Kill) };
+    internal override IReadOnlyCollection<IPossibleAction> AvailableActions => new[] { PossibleAction<KillAction>.Create() };
 }

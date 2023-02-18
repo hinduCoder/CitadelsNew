@@ -18,7 +18,7 @@ public class DestroyDistrict : IGameEvent
 
     public void Handle(Game game)
     {
-        game.CurrentTurn.ExecuteAction(ActionPool.DestroyDistrict, Victim, DistrictToDestroy);
+        game.CurrentTurn.ExecuteAction(new DestroyDistrictAction(), Victim, DistrictToDestroy);
     }
 
     public bool IsValid(Game game)

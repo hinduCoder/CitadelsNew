@@ -4,10 +4,15 @@ internal class PossibleAction<T> : IPossibleAction
     where T : class, IAction
 {
     public bool Obligatory { get; }
-    internal PossibleAction(T action)
+    private PossibleAction(bool obligatory)
     {
-        Obligatory = action.Obligatory;
+        Obligatory = obligatory;
     }
     public bool SupportsAction(Type actionType)
         => actionType == typeof(T);
+
+    internal static PossibleAction<T> Create(bool obligatory = false) 
+    {
+        return new PossibleAction<T>(obligatory);
+    }
 }

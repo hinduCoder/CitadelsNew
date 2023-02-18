@@ -2,5 +2,4 @@
 
 internal interface IAction
 {
-    bool Obligatory { get; }
 }

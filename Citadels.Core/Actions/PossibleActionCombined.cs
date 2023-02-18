@@ -5,10 +5,15 @@ internal class PossibleActionCombined<T1, T2> : IPossibleAction
     where T2 : IAction
 {
     public bool Obligatory { get; }
-    internal PossibleActionCombined(T1 action1, T2 action2)
+    private PossibleActionCombined(bool obligatory)
     {
-        Obligatory = action1.Obligatory && action2.Obligatory;
+        Obligatory = obligatory;
     }
     public bool SupportsAction(Type actionType)
         => actionType == typeof(T1) || actionType == typeof(T2);
+
+    internal static PossibleActionCombined<T1, T2> Create(bool obligatory = false)
+    {
+        return new PossibleActionCombined<T1, T2>(obligatory);
+    }
 }
