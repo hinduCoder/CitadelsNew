@@ -6,12 +6,12 @@ namespace Citadels.Core.Events;
 
 public class Kill : IGameEvent
 {
+    public Character Victim { get; private set; }
+
     public Kill(Character victim)
     {
         Victim = victim;
     }
-
-    public Character Victim { get; private set; }
 
     public void Handle(Game game)
     {
