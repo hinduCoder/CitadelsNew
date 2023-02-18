@@ -23,5 +23,6 @@ public class DestroyDistrict : IGameEvent
 
     public bool IsValid(Game game)
         => game is { Status: GameStatus.Round, CurrentTurn.Player.CurrentCharacter.Rank: CharacterRanks.Warlord }
-        && game.CurrentTurn.ActionAvaialble<DestroyDistrictAction>();
+        && game.CurrentTurn.ActionAvaialble<DestroyDistrictAction>()
+        && game.CurrentTurn.Player.Coins >= DistrictToDestroy.BuildPrice-1;
 }
