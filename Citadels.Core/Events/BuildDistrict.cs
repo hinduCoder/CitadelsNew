@@ -22,6 +22,7 @@ public class BuildDistrict : IGameEvent
         return game.Status == GameStatus.Round
         && currentTurn.CanBuild
         && currentTurn.Player.Districts.Contains(DistrictToBuild)
+        && !currentTurn.Player.BuiltDistricts.Contains(DistrictToBuild)
         && currentTurn.Player.Coins >= DistrictToBuild.BuildPrice;
     }
 }
