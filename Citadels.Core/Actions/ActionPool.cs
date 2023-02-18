@@ -1,4 +1,6 @@
-﻿namespace Citadels.Core.Actions;
+﻿using Citadels.Core.Actions.CharacterActions;
+
+namespace Citadels.Core.Actions;
 
 internal static class ActionPool
 {

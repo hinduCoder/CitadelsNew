@@ -1,4 +1,4 @@
-﻿namespace Citadels.Core.Actions;
+﻿namespace Citadels.Core.Actions.CharacterActions;
 
 internal class MerchantFreeCoin : AutomaticAction
 {

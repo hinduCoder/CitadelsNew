@@ -1,4 +1,5 @@
 ﻿using Citadels.Core.Actions;
+using Citadels.Core.Actions.CharacterActions;
 using Citadels.Core.Characters;
 
 namespace Citadels.Core.Events;
