@@ -5,7 +5,7 @@ namespace Citadels.Core.Characters;
 
 public class Assasin : Character
 {
-    public override int Rank => 1;
+    public override int Rank => CharacterRanks.Assasin;
 
     internal override IReadOnlyCollection<IPossibleAction> AvailableActions => new[] { new PossibleAction<KillAction>(ActionPool.Kill) };
 }
