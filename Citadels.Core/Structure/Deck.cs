@@ -27,7 +27,9 @@ public class Deck<T>
         return result;
     }
 
-    public void PutUnder(params T[] cards)
+    public void PutUnder(params T[] cards) => PutUnder(cards.AsEnumerable());
+
+    public void PutUnder(IEnumerable<T> cards)
     {
         foreach (var card in cards)
         {

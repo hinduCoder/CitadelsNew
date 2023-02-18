@@ -76,10 +76,22 @@ public class Turn
         MarkActionDone(simpleAction);
     }
 
+    internal void ExecuteAction<TParam>(ISimpleAction<TParam> simpleAction, TParam parameterValue)
+    {
+        simpleAction.Execute(Game, parameterValue);
+        MarkActionDone(simpleAction);
+    }
+
     internal void ExecuteAction(ICharacterAction characterAction, Character character)
     {
         characterAction.Execute(Game, character);
         MarkActionDone(characterAction);
+    }
+
+    internal void ExecuteAction(IPlayerAction playerAction, Player player)
+    {
+        playerAction.Execute(Game, player);
+        MarkActionDone(playerAction);
     }
 
     internal void ExecuteAction(IPlayerDistrictAction playerDistrictAction, Player player, District district)

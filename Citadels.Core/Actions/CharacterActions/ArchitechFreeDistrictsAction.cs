@@ -1,6 +1,6 @@
 ﻿namespace Citadels.Core.Actions.CharacterActions;
 
-internal class ArchitechFreeDistricts : AutomaticAction
+internal class ArchitechFreeDistrictsAction : AutomaticAction
 {
     public override void Execute(Game game)
     {

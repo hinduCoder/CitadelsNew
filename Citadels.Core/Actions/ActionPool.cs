@@ -6,8 +6,10 @@ namespace Citadels.Core.Actions;
 internal static class ActionPool
 {
     internal static KillAction Kill = new ();
-    internal static StealAction Steal= new ();
-    internal static KingCrownTake TakeCrown = new();
-    internal static MerchantFreeCoin MerchantFreeCoin = new();
-    internal static ArchitechFreeDistricts ArchitechFreeDistricts = new();
+    internal static StealAction Steal = new ();
+    internal static ExchangeCardsWithDeckAction ExchangeCardsWithDeck = new();
+    internal static ExchangeCardsWithPlayerAction ExchangeCardsWithPlayer = new();
+    internal static KingCrownTakeAction TakeCrown = new();
+    internal static MerchantFreeCoinAction MerchantFreeCoin = new();
+    internal static ArchitechFreeDistrictsAction ArchitechFreeDistricts = new();
 }

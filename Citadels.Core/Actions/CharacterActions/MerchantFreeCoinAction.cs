@@ -1,9 +1,9 @@
 ﻿namespace Citadels.Core.Actions.CharacterActions;
 
-internal class KingCrownTake : AutomaticAction
+internal class MerchantFreeCoinAction : AutomaticAction
 {
     public override void Execute(Game game)
     {
-        game.SetCrownOwner(game.CurrentTurn.Player);
+        game.CurrentTurn.Player.Coins += 1;
     }
 }
