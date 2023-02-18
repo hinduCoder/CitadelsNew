@@ -1,4 +1,5 @@
 ﻿using Citadels.Core.Characters;
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Citadels.Core;
@@ -22,7 +23,11 @@ public class Round
     [MemberNotNull(nameof(CurrentTurn))]
     internal void NewTurn()
     {
-        CurrentTurn = new Turn(_game, _playersOrder[_turnNumber].Player);
-        _turnNumber++;
+        Player player;
+        do
+        {
+            player = _playersOrder[_turnNumber++].Player;
+        } while (!player.IsAlive);
+        CurrentTurn = new Turn(_game, player);
     }
 }

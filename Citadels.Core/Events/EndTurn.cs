@@ -7,5 +7,5 @@ public class EndTurn : IGameEvent
         game.CurrentRound.NewTurn();
     }
 
-    public bool IsValid(Game game) => game.Status == GameStatus.Round && game.CurrentRound.CurrentTurn.GatherActionDone;
+    public bool IsValid(Game game) => game is { Status: GameStatus.Round, CurrentTurn.CanEnd: true };
 }

@@ -13,8 +13,8 @@ public class Player
     public int Coins { get; internal set; }
     [AllowNull]
     public Character CurrentCharacter { get; internal set; }
+    public bool IsCrownOwner { get; internal set; }
     public bool IsAlive { get; internal set; } = true;
-
 
     public IReadOnlyList<District> Districts => _districts;
     public IReadOnlyList<District> BuiltDistricts => _builtDistricts;

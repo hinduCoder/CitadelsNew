@@ -16,6 +16,8 @@ public class Game
     [AllowNull]
     public Round CurrentRound { get; set; }
     [AllowNull]
+    public Turn CurrentTurn => CurrentRound.CurrentTurn;
+    [AllowNull]
     internal Deck<District> DistrictDeck { get; private set; }
 
     internal void StartGame(IEnumerable<Player> players, 
@@ -23,6 +25,7 @@ public class Game
         IEnumerable<District> randomizedDistricts)
     {
         _players.AddRange(players);
+        SetCrownOwner(Players[0]);
         Draft = new Draft(randomizedCharacters, _players, 0); //TODO crown owner index mustn't be always 0
         DistrictDeck = new Deck<District>(randomizedDistricts);
 
@@ -38,4 +41,13 @@ public class Game
         CurrentRound = new Round(this);
         Status = GameStatus.Round;
     }
+
+    internal void SetCrownOwner(Player newCrownOwner)
+    {
+        foreach (var player in Players)
+        {
+            player.IsCrownOwner = false;
+        }
+        newCrownOwner.IsCrownOwner = true;
+    } 
 }
