@@ -5,8 +5,6 @@ namespace Citadels.Core.Actions.CharacterActions;
 
 internal class GatherCoinsFromBuiltDistrictsAction : ISimpleAction
 {
-    public bool Obligatory => true;
-
     public void Execute(Game game)
     {
         var player = game.CurrentTurn.Player;

@@ -4,8 +4,6 @@ namespace Citadels.Core.Actions.CharacterAction;
 
 internal class StealAction : ICharacterAction
 {
-    public bool Obligatory => false;
-
     public void Execute(Game game, Character character)
     {
         var currentPlayer = game.CurrentTurn.Player;

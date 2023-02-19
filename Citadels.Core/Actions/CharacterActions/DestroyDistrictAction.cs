@@ -4,8 +4,6 @@ namespace Citadels.Core.Actions.CharacterActions;
 
 internal class DestroyDistrictAction : IPlayerDistrictAction
 {
-    public bool Obligatory => false;
-
     public void Execute(Game game, Player player, District district)
     {
         var destoyPrice = district.BuildPrice - 1;

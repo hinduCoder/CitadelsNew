@@ -2,8 +2,6 @@
 
 internal class ExchangeCardsWithDeckAction : ISimpleAction<int>
 {
-    public bool Obligatory => false;
-
     public void Execute(Game game, int exchangeCount)
     {
         var player = game.CurrentTurn.Player;
