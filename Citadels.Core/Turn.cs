@@ -71,7 +71,11 @@ public class Turn
         }
 
         Player.AddDistricts(district);
-        //TODO put the rest under the deck
+
+        _districtsForChoose.Remove(district);
+        Game.DistrictDeck.PutUnder(_districtsForChoose);
+        _districtsForChoose.Clear();
+
         GatherActionInProgress = false;
         GatherActionDone = true;
     }
