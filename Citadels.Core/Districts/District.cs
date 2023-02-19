@@ -1,4 +1,6 @@
-﻿namespace Citadels.Core.Districts;
+﻿using System.Reflection;
+
+namespace Citadels.Core.Districts;
 
 public class District : IEquatable<District>
 {
@@ -48,7 +50,7 @@ public class District : IEquatable<District>
 
             for (var i = 0; i < count; i++)
             {
-                districts.Add(new(name, color switch
+                var kind = color switch
                 {
                     "yellow" => DistrictKind.Noble,
                     "red" => DistrictKind.Military,
@@ -56,7 +58,17 @@ public class District : IEquatable<District>
                     "purple" => DistrictKind.Special,
                     "blue" => DistrictKind.Religious,
                     _ => throw new NotSupportedException()
-                }, price));
+                };
+                var type = Assembly.GetExecutingAssembly().DefinedTypes
+                    .Where(t => t.BaseType == typeof(District))
+                    .Where(t => t.GetCustomAttribute<DistrictNameAttribute>()?.Name == name)
+                    .FirstOrDefault();
+                if (type is null)
+                {
+                    districts.Add(new(name, kind, price));
+                } else {
+                    districts.Add((District)Activator.CreateInstance(type, name, kind, price)!);
+                }
             }
         }
         Pool = districts;
@@ -67,6 +79,9 @@ public class District : IEquatable<District>
     public string Name { get; private set; }
     public DistrictKind Kind { get; private set; }
 
+    public virtual bool CanBeDestroyed => true;
+    public virtual int Points => BuildPrice;
+
     public bool Equals(District? other) => other?.Name == Name && other?.Kind == Kind;
 
     public override bool Equals(object? obj) => Equals(obj as District);
@@ -74,7 +89,7 @@ public class District : IEquatable<District>
     public override int GetHashCode() => HashCode.Combine(Name, Kind);
 
 
-    private District(string name, DistrictKind kind, int buildPrice)
+    protected District(string name, DistrictKind kind, int buildPrice)
     {
         Name = name;
         Kind = kind;

@@ -1,4 +1,5 @@
 ﻿using Citadels.Core.Districts;
+using Citadels.Core.Districts.Special;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Citadels.Core;
@@ -22,7 +23,7 @@ public class Scoreboard
     {
         foreach (var player in Game.Players)
         {
-            var playerScore = player.BuiltDistricts.Sum(x => x.BuildPrice);
+            var playerScore = player.BuiltDistricts.Sum(x => x.Points);
             if (player.BuiltDistricts.Select(x => x.Kind).Distinct().Count() == Enum.GetValues<DistrictKind>().Length)
             {
                 playerScore += 3;
