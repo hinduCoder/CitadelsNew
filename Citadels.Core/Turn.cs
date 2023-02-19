@@ -2,7 +2,6 @@
 using Citadels.Core.Actions.CharacterActions;
 using Citadels.Core.Characters;
 using Citadels.Core.Districts;
-using System.Numerics;
 
 namespace Citadels.Core;
 
@@ -50,8 +49,18 @@ public class Turn
 
     internal void GatherDistrict()
     {
-        _districtsForChoose.AddRange(Game.DistrictDeck.Take(2));
-        GatherActionInProgress = true;
+        var count = Player.DistrictCountToChooseFrom;
+        var districts = Game.DistrictDeck.Take(count);
+        if (Player.CanTakeAllDistricts)
+        {
+            Player.AddDistricts(districts);
+            GatherActionDone = true;
+        } 
+        else
+        {
+            _districtsForChoose.AddRange(districts);
+            GatherActionInProgress = true;
+        }
     }
 
     internal void ChooseDistrict(District district)
