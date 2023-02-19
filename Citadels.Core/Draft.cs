@@ -22,12 +22,6 @@ public class Draft
     public Draft(IEnumerable<Character> randomizedCharacters, IReadOnlyList<Player> players, int firstPlayer)
     {
         _characters.AddRange(randomizedCharacters);
-        
-        //The King can't be in opened discarded. Ensure it by making it last, then will be sorted anyway
-        var king = _characters.Find(x => x.Is<King>())!; //TODO king can be discared closed
-        _characters.Remove(king);
-        _characters.Add(king);
-
         _players.AddRange(players.Skip(firstPlayer));
         _players.AddRange(players.Take(players.Count - PlayersCount));
     }
@@ -39,6 +33,8 @@ public class Draft
             throw new InvalidOperationException();
         }
         var openCardsCount = Math.Max(7 - _players.Count - 1, 0);
+        EnsureKingPosition(openCardsCount);
+
         _openDiscardedCharacters.AddRange(_characters.Take(openCardsCount));
         _characters.RemoveRange(0, openCardsCount);
         ClosedDiscardedCharacter = _characters[0];
@@ -62,5 +58,19 @@ public class Draft
             _characters.Add(ClosedDiscardedCharacter!);
             ClosedDiscardedCharacter = null;
         }
+    }
+
+    private void EnsureKingPosition(int openCardsCount)
+    {
+        var kingIndex = _characters.FindIndex(x => x is King);
+        if (kingIndex >= openCardsCount)
+        {
+            return;
+        }
+
+        var seed = _characters.Select(x => x.Rank).Aggregate(0, (result, current) => result * 10 + current);
+        var random = new Random(seed);
+        var indexToReplace = random.Next(openCardsCount, _players.Count);
+        (_characters[kingIndex], _characters[indexToReplace]) = (_characters[indexToReplace], _characters[kingIndex]);
     }
 }
