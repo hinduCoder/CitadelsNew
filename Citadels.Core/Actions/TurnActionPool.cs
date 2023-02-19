@@ -4,7 +4,9 @@ internal class TurnActionPool
 {
     private readonly List<Item> _actionsDone = new();
 
-    internal TurnActionPool(IEnumerable<IPossibleAction> possibleActions)
+    internal TurnActionPool(IEnumerable<IPossibleAction> possibleActions) => Append(possibleActions);
+
+    internal void Append(IEnumerable<IPossibleAction> possibleActions)
     {
         _actionsDone.AddRange(possibleActions.Select(x => new Item(x)));
     }

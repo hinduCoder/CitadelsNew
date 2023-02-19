@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using Citadels.Core.Actions;
+using System.Reflection;
 
 namespace Citadels.Core.Districts;
 
@@ -75,6 +76,8 @@ public class District : IEquatable<District>
     }
     public static IReadOnlyList<District> Pool { get; private set; }
 
+    private protected List<IPossibleAction> _availableActions = new();
+
     public int BuildPrice { get; private set; }
     public string Name { get; private set; }
     public DistrictKind Kind { get; private set; }
@@ -82,12 +85,7 @@ public class District : IEquatable<District>
     public virtual bool CanBeDestroyed => true;
     public virtual int Points => BuildPrice;
 
-    public bool Equals(District? other) => other?.Name == Name && other?.Kind == Kind;
-
-    public override bool Equals(object? obj) => Equals(obj as District);
-
-    public override int GetHashCode() => HashCode.Combine(Name, Kind);
-
+    internal IReadOnlyCollection<IPossibleAction> AvailableActions => _availableActions;
 
     protected District(string name, DistrictKind kind, int buildPrice)
     {
@@ -95,5 +93,14 @@ public class District : IEquatable<District>
         Kind = kind;
         BuildPrice = buildPrice;
     }
+
+    public bool Equals(District? other) => other?.Name == Name && other?.Kind == Kind;
+
+    public override bool Equals(object? obj) => Equals(obj as District);
+
+    public override int GetHashCode() => HashCode.Combine(Name, Kind);
+
+    private protected void RegisterPossibleActions(params IPossibleAction[] possibleActions)
+        => _availableActions.AddRange(possibleActions);
 }
 

@@ -25,7 +25,7 @@ public class Turn
     {
         Game = game;
         Player = player;
-        TurnActionPool = new TurnActionPool(player.CurrentCharacter.AvailableActions);
+        TurnActionPool = new TurnActionPool(player.CurrentCharacter.AvailableActions.Concat(player.BuiltDistricts.SelectMany(x => x.AvailableActions)));
     }
 
     internal void ExecuteAutomaticActions()
@@ -68,6 +68,7 @@ public class Turn
     internal void BuildDistrict(District district)
     {
         Player.BuildDistrict(district);
+        TurnActionPool.Append(district.AvailableActions);
         DistrictBuiltCount++;
     }
 

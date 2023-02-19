@@ -29,6 +29,7 @@ public class Player
 
     internal void AddDistricts(params District[] districts) => AddDistricts(districts.AsEnumerable());
     internal void AddDistricts(IEnumerable<District> districts) => _districts.AddRange(districts);
+    internal void FoldDistrict(District district) => _districts.Remove(district);
     internal void ExchageDistrictsWithOtherPlayer(Player player)
     {
         var otherPlayerDistricts = player.Districts.ToList();
