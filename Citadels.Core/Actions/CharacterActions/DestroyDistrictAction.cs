@@ -1,4 +1,5 @@
 ﻿using Citadels.Core.Districts;
+using Citadels.Core.Districts.Special;
 
 namespace Citadels.Core.Actions.CharacterActions;
 
@@ -12,7 +13,12 @@ internal class DestroyDistrictAction : IPlayerDistrictAction
         }
         var destoyPrice = district.BuildPrice - 1;
         var currentPlayer = game.CurrentTurn.Player;
+
         currentPlayer.Coins -= destoyPrice;
+        if (player.HasDistrictOfType<GreatWall>() && district is not GreatWall)
+        {
+            currentPlayer.Coins--;
+        }
         player.DestroyDistrict(district);
         game.DistrictDeck.PutUnder(district);
     }

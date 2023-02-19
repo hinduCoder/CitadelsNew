@@ -1,4 +1,5 @@
 ﻿using Citadels.Core.Actions;
+using Citadels.Core.Actions.CharacterActions;
 using Citadels.Core.Characters;
 using Citadels.Core.Districts;
 using System.Numerics;
@@ -15,6 +16,7 @@ public class Turn
     public bool GatherActionDone { get; private set; }
     public bool GatherActionInProgress { get; private set; }
     public int DistrictBuiltCount { get; private set; }
+    public District? LastDestroyedDistrict { get; private set; }
 
     public IReadOnlyList<District> DistrictsForChoose => _districtsForChoose;
     public bool GatherActionAvailable => !GatherActionDone && !GatherActionInProgress;
@@ -70,6 +72,16 @@ public class Turn
         Player.BuildDistrict(district);
         TurnActionPool.Append(district.AvailableActions);
         DistrictBuiltCount++;
+    }
+
+    internal void DestroyDistrict(Player victim, District district)
+    {
+        LastDestroyedDistrict = district;
+        ExecuteAction(new DestroyDistrictAction(), victim, district);
+        foreach (var actionType in district.AvailableActions.SelectMany(a => a.GetType().GetGenericArguments()))
+        {
+            TurnActionPool.MarkActionDone(actionType);
+        }
     }
 
     internal bool ActionAvaialble<TAction>() where TAction : IAction

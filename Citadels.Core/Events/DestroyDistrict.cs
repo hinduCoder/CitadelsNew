@@ -1,6 +1,7 @@
 ﻿using Citadels.Core.Actions.CharacterActions;
 using Citadels.Core.Characters;
 using Citadels.Core.Districts;
+using Citadels.Core.Districts.Special;
 
 namespace Citadels.Core.Events;
 
@@ -24,11 +25,15 @@ public class DestroyDistrict : IGameEvent
 
     public void Handle(Game game)
     {
-        game.CurrentTurn.ExecuteAction(new DestroyDistrictAction(), Victim ?? game.Players.Single(x => x.Name == VictimPlayerName), DistrictToDestroy);
+        game.CurrentTurn.DestroyDistrict(GetVictim(game), DistrictToDestroy);
     }
 
     public bool IsValid(Game game)
         => DistrictToDestroy.CanBeDestroyed
-        && game.CurrentTurn.ActionAvaialble<DestroyDistrictAction>()
-        && game.CurrentTurn.Player.Coins >= DistrictToDestroy.BuildPrice-1;
+        && game is { Status: GameStatus.Round, CurrentTurn.Player.CurrentCharacter.Rank: CharacterRanks.Warlord }
+    && game.CurrentTurn.ActionAvaialble<DestroyDistrictAction>()
+        && game.CurrentTurn.Player.Coins >= DistrictToDestroy.BuildPrice
+            - (GetVictim(game).HasDistrictOfType<GreatWall>() && DistrictToDestroy is not GreatWall ? 0 : 1);
+
+    private Player GetVictim(Game game) => Victim ?? game.Players.Single(x => x.Name == VictimPlayerName);
 }
