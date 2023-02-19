@@ -9,7 +9,7 @@ public abstract class Character : IComparable<Character>, IEquatable<Character>
     static Character()
     {
         var characterTypes = Assembly.GetExecutingAssembly().DefinedTypes.Where(x => x.BaseType == typeof(Character)).ToList();
-        Pool = characterTypes.Select(characterType => (Character)Activator.CreateInstance(characterType)!).OrderBy(x => x.Rank).ToArray();
+        Pool = characterTypes.Select(characterType => (Character)Activator.CreateInstance(characterType, nonPublic: true)!).OrderBy(x => x.Rank).ToArray();
     }
 
     private protected List<IPossibleAction> _availableActions = new();
