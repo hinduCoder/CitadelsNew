@@ -17,6 +17,8 @@ public class Game
     public Round CurrentRound { get; set; }
     [AllowNull]
     public Turn CurrentTurn => CurrentRound.CurrentTurn;
+    public Scoreboard? Scoreboard { get; private set; }
+
     [AllowNull]
     internal Deck<District> DistrictDeck { get; private set; }
 
@@ -50,6 +52,7 @@ public class Game
         if (Players.Any(x => x.BuiltDistricts.Count >= 7))
         {
             Status = GameStatus.Ended;
+            Scoreboard = new(this);
             return;
         }
         Status = GameStatus.ReadyToDraft;
