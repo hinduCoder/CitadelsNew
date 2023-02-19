@@ -3,6 +3,7 @@
 public enum GameStatus
 {
     NotStarted,
+    ReadyToDraft,
     Draft,
     Round,
     Ended

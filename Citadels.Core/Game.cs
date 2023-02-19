@@ -20,15 +20,18 @@ public class Game
     [AllowNull]
     internal Deck<District> DistrictDeck { get; private set; }
 
-    internal void StartGame(IEnumerable<Player> players, 
-        IEnumerable<Character> randomizedCharacters,
+    internal void StartGame(IEnumerable<Player> players,
         IEnumerable<District> randomizedDistricts)
     {
         _players.AddRange(players);
         SetCrownOwner(Players[0]);
-        Draft = new Draft(randomizedCharacters, _players, 0); //TODO crown owner index mustn't be always 0
         DistrictDeck = new Deck<District>(randomizedDistricts);
+        Status = GameStatus.ReadyToDraft;
+    }
 
+    internal void StartDraft(IEnumerable<Character> randomizedCharacters)
+    {
+        Draft = new Draft(randomizedCharacters, _players, _players.FindIndex(x => x.IsCrownOwner));
         Status = GameStatus.Draft;
     }
 
