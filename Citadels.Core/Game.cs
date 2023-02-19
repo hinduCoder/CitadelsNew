@@ -26,6 +26,10 @@ public class Game
         _players.AddRange(players);
         SetCrownOwner(Players[0]);
         DistrictDeck = new Deck<District>(randomizedDistricts);
+        foreach (var player in Players)
+        {
+            player.AddDistricts(DistrictDeck.Take(4));
+        }
         Status = GameStatus.ReadyToDraft;
     }
 
@@ -37,12 +41,18 @@ public class Game
 
     internal void StartRound()
     {
-        foreach (var player in Players)
-        {
-            player.AddDistricts(DistrictDeck.Take(4));
-        }
         CurrentRound = new Round(this);
         Status = GameStatus.Round;
+    }
+
+    internal void EndRound()
+    {
+        if (Players.Any(x => x.BuiltDistricts.Count >= 7))
+        {
+            Status = GameStatus.Ended;
+            return;
+        }
+        Status = GameStatus.ReadyToDraft;
     }
 
     internal void SetCrownOwner(Player newCrownOwner)

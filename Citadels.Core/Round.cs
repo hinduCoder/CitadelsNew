@@ -11,6 +11,7 @@ public class Round
     private int _turnNumber = 0;
 
     public Turn CurrentTurn { get; private set; }
+    public bool InProgress { get; private set; } = true;
 
     internal event Action<Player, Character>? CharacterRevealEvent; 
 
@@ -38,13 +39,27 @@ public class Round
         CurrentTurn.ExecuteAutomaticActions();
     }
 
+    internal void EndTurn()
+    {
+        if (!_playersOrder.Skip(_turnNumber).Any(x => x.IsAlive))
+        {
+            End();
+            return;
+        }
+        NewTurn();
+    }
+
     internal void End()
     {
+        InProgress = false;
+
         CharacterRevealEvent = null;
         var playerWithKing = _playersOrder.SingleOrDefault(x => x.CurrentCharacter.Is<King>());
         if (playerWithKing is not null)
         {
             _game.SetCrownOwner(playerWithKing);
         }
+
+        _game.EndRound();
     }
 }

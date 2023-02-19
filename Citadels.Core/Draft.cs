@@ -24,6 +24,7 @@ public class Draft
         _characters.AddRange(randomizedCharacters);
         _players.AddRange(players.Skip(firstPlayer));
         _players.AddRange(players.Take(players.Count - PlayersCount));
+        _players.ForEach(p => p.CurrentCharacter = null);
     }
 
     public void DiscardFirstCards()
