@@ -84,6 +84,7 @@ public class District : IEquatable<District>
 
     public virtual bool CanBeDestroyed => true;
     public virtual int Points => BuildPrice;
+    public virtual bool CountAsAnyTypeDuringGatheringCoins => false;
     public virtual bool CountAsAnyTypeAtTheEnd => false;
 
 

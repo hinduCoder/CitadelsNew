@@ -17,6 +17,6 @@ internal class GatherCoinsFromBuiltDistrictsAction : ISimpleAction
             _ => throw new InvalidOperationException()
         };
 
-        player.Coins += player.BuiltDistricts.Count(x => x.Kind == distinctKind);
+        player.Coins += player.BuiltDistricts.Count(x => x.Kind == distinctKind || x.CountAsAnyTypeDuringGatheringCoins);
     }
 }
