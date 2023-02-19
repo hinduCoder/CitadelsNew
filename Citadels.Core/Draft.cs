@@ -33,7 +33,7 @@ public class Draft
         {
             throw new InvalidOperationException();
         }
-        var openCardsCount = Math.Max(7 - _players.Count - 1, 0);
+        var openCardsCount = Math.Max(MaximumPlayersCount - _players.Count - 1, 0);
         EnsureKingPosition(openCardsCount);
 
         _openDiscardedCharacters.AddRange(_characters.Take(openCardsCount));

@@ -84,6 +84,8 @@ public class District : IEquatable<District>
 
     public virtual bool CanBeDestroyed => true;
     public virtual int Points => BuildPrice;
+    public virtual bool CountAsAnyTypeAtTheEnd => false;
+
 
     internal IReadOnlyCollection<IPossibleAction> AvailableActions => _availableActions;
 

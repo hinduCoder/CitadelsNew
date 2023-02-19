@@ -23,20 +23,12 @@ public class Scoreboard
     {
         foreach (var player in Game.Players)
         {
-            var playerScore = player.BuiltDistricts.Sum(x => x.Points);
-            if (player.BuiltDistricts.Select(x => x.Kind).Distinct().Count() == Enum.GetValues<DistrictKind>().Length)
-            {
-                playerScore += 3;
-            }
+            var playerScore = player.Score;
             if (player.Name == Game.CurrentRound.FirstPlayerWithBuiltCity?.Name)
             {
                 playerScore += 2;
             }
-            if (player.BuiltDistricts.Count >= 7)
-            {
-                playerScore += 2;
-            }
-
+            
             _scores.Add(new Score(player, playerScore));
         }
 

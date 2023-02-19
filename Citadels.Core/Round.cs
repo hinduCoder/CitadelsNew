@@ -41,7 +41,7 @@ public class Round
 
     internal void EndTurn()
     {
-        FirstPlayerWithBuiltCity ??= _playersOrder.FirstOrDefault(x => x.BuiltDistricts.Count >= 7);
+        FirstPlayerWithBuiltCity ??= _playersOrder.FirstOrDefault(x => x.CityBuilt);
         if (!_playersOrder.Skip(_turnNumber).Any(x => x.IsAlive))
         {
             End();

@@ -49,7 +49,7 @@ public class Game
 
     internal void EndRound()
     {
-        if (Players.Any(x => x.BuiltDistricts.Count >= 7))
+        if (Players.Any(x => x.CityBuilt))
         {
             Status = GameStatus.Ended;
             Scoreboard = new(this);
