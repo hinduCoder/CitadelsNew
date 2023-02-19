@@ -35,6 +35,7 @@ public class Round
         CharacterRevealEvent?.Invoke(player, player.CurrentCharacter);
 
         CurrentTurn = new Turn(_game, player);
+        CurrentTurn.ExecuteAutomaticActions();
     }
 
     internal void End()

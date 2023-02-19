@@ -1,10 +1,9 @@
-﻿using Citadels.Core.Actions;
-using Citadels.Core.Actions.CharacterActions;
+﻿using Citadels.Core.Actions.CharacterActions;
 using Citadels.Core.Characters;
 
 namespace Citadels.Core.Events;
 
-internal class GatherCoinsFromBuiltDistricts : IGameEvent
+public class GatherCoinsFromBuiltDistricts : IGameEvent
 {
     public void Handle(Game game)
     {

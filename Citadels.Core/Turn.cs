@@ -1,6 +1,7 @@
 ﻿using Citadels.Core.Actions;
 using Citadels.Core.Characters;
 using Citadels.Core.Districts;
+using System.Numerics;
 
 namespace Citadels.Core;
 
@@ -24,12 +25,15 @@ public class Turn
     {
         Game = game;
         Player = player;
-
-        foreach (var action in player.CurrentCharacter.AutomaticActions)
-        {
-            action.Execute(game);
-        }
         TurnActionPool = new TurnActionPool(player.CurrentCharacter.AvailableActions);
+    }
+
+    internal void ExecuteAutomaticActions()
+    {
+        foreach (var action in Player.CurrentCharacter.AutomaticActions)
+        {
+            action.Execute(Game);
+        }
     }
 
     internal void End()
