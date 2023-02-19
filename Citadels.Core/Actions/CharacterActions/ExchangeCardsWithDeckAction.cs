@@ -1,13 +1,19 @@
-﻿namespace Citadels.Core.Actions.CharacterActions;
+﻿using Citadels.Core.Districts;
 
-internal class ExchangeCardsWithDeckAction : ISimpleAction<int>
+namespace Citadels.Core.Actions.CharacterActions;
+
+internal class ExchangeCardsWithDeckAction : ISimpleAction<IReadOnlyCollection<District>>
 {
-    public void Execute(Game game, int exchangeCount)
+    public void Execute(Game game, IReadOnlyCollection<District> exchangingDistricts)
     {
         var player = game.CurrentTurn.Player;
-        var districtsCount = player.Districts.Count;
-        game.DistrictDeck.PutUnder(player.Districts);
-        player.ClearDistricts();
-        player.AddDistricts(game.DistrictDeck.Take(districtsCount)); //TODO count can be arbitrary
+        var districtsCount = exchangingDistricts.Count;
+        foreach (var districts in exchangingDistricts)
+        {
+            player.FoldDistrict(districts);
+        }
+        game.DistrictDeck.PutUnder(exchangingDistricts);
+
+        player.AddDistricts(game.DistrictDeck.Take(districtsCount));
     }
 }
