@@ -1,4 +1,6 @@
-﻿namespace Citadels.Core;
+﻿using Citadels.Core.Errors;
+
+namespace Citadels.Core;
 
 public interface IGameEvent
 {

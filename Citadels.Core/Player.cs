@@ -55,7 +55,7 @@ public class Player
     }
 
     internal bool HasDistrictOfType<T>() where T : District
-        => BuiltDistricts.OfType<Library>().Any();
+        => BuiltDistricts.OfType<T>().Any();
 
     private int GetScore()
     {

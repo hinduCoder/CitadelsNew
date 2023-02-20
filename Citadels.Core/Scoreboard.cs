@@ -6,7 +6,7 @@ namespace Citadels.Core;
 
 public class Scoreboard
 {
-    private readonly List<Score> _scores = new List<Score>();
+    private readonly List<Score> _scores = new();
     private Game Game { get; }
 
     public IReadOnlyList<Score> Scores => _scores;
@@ -24,7 +24,7 @@ public class Scoreboard
         foreach (var player in Game.Players)
         {
             var playerScore = player.Score;
-            if (player.Name == Game.CurrentRound.FirstPlayerWithBuiltCity?.Name)
+            if (player == Game.CurrentRound.FirstPlayerWithBuiltCity)
             {
                 playerScore += 2;
             }

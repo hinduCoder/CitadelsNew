@@ -26,7 +26,10 @@ public class Turn
     {
         Game = game;
         Player = player;
-        TurnActionPool = new TurnActionPool(player.CurrentCharacter.AvailableActions.Concat(player.BuiltDistricts.SelectMany(x => x.AvailableActions)));
+        TurnActionPool =
+            new TurnActionPool(
+                player.CurrentCharacter.AvailableActions.Concat(
+                    player.BuiltDistricts.SelectMany(x => x.AvailableActions)));
     }
 
     internal void ExecuteAutomaticActions()
@@ -55,7 +58,7 @@ public class Turn
         {
             Player.AddDistricts(districts);
             GatherActionDone = true;
-        } 
+        }
         else
         {
             _districtsForChoose.AddRange(districts);
