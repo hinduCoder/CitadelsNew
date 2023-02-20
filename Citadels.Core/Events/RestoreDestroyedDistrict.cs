@@ -18,6 +18,5 @@ public class RestoreDestroyedDistrict : IGameEvent
 
     public bool IsValid(Game game)
         => game is { Status: GameStatus.Round, CurrentTurn.LastDestroyedDistrict: not null }
-        && game.CurrentTurn.ActionAvaialble<RestoreDestroyedDistrictAction>()
         && TargetPlayer.Coins >= 1;
 }
