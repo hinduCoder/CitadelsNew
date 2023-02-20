@@ -6,8 +6,9 @@ namespace Citadels.Core.Districts;
 public class District : IEquatable<District>
 {
     #region raw list
-    private static readonly string RawList = 
-@"5 Tavern 1 green 
+
+    private static readonly string RawList =
+        @"5 Tavern 1 green 
 4 Market 2 green
 3 Trading Post 2 green
 3 Docks 3 green
@@ -37,7 +38,9 @@ public class District : IEquatable<District>
 1 Dragon Gate 6 purple
 1 Imperial Treasure 5 purple
 1 Map Room 5 purple";
+
     #endregion
+
     static District()
     {
         using var stringReader = new StringReader(RawList);
@@ -47,7 +50,11 @@ public class District : IEquatable<District>
             var line = stringReader.ReadLine()?.TrimEnd();
             if (line == null)
                 break;
-            var (count, name, price, color) = line.Split(' ') switch { var a => (int.Parse(a[0]), string.Join(' ', a[1..^2]), int.Parse(a[^2]), a[^1]) };
+            
+            var (count, name, price, color) = line.Split(' ') switch
+            {
+                var a => (int.Parse(a[0]), string.Join(' ', a[1..^2]), int.Parse(a[^2]), a[^1])
+            };
 
             for (var i = 0; i < count; i++)
             {
@@ -61,19 +68,23 @@ public class District : IEquatable<District>
                     _ => throw new NotSupportedException()
                 };
                 var type = Assembly.GetExecutingAssembly().DefinedTypes
-                    .Where(t => t.BaseType == typeof(District))
-                    .Where(t => t.GetCustomAttribute<DistrictNameAttribute>()?.Name == name)
-                    .FirstOrDefault();
+                    .Where(t => t. BaseType == typeof(District))
+                    .FirstOrDefault(t => t.GetCustomAttribute<DistrictNameAttribute>()?.Name == name);
+                
                 if (type is null)
                 {
                     districts.Add(new(name, kind, price));
-                } else {
+                }
+                else
+                {
                     districts.Add((District)Activator.CreateInstance(type, name, kind, price)!);
                 }
             }
         }
+
         Pool = districts;
     }
+
     public static IReadOnlyList<District> Pool { get; private set; }
 
     private protected List<IPossibleAction> _availableActions = new();
@@ -106,4 +117,3 @@ public class District : IEquatable<District>
     private protected void RegisterPossibleActions(params IPossibleAction[] possibleActions)
         => _availableActions.AddRange(possibleActions);
 }
-

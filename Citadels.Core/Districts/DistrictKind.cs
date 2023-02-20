@@ -1,7 +1,10 @@
 ﻿namespace Citadels.Core.Districts;
 
-public enum DistrictKind
+public enum DistrictKind : byte
 {
-    Noble, Religious, Trade, Military, Special
+    Noble = 1,
+    Religious = 2,
+    Trade = 3,
+    Military = 4,
+    Special = 5
 }
-

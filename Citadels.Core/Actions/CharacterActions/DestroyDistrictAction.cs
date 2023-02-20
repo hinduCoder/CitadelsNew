@@ -11,10 +11,10 @@ internal class DestroyDistrictAction : IPlayerDistrictAction
         {
             return;
         }
-        var destoyPrice = district.BuildPrice - 1;
+        var destroyPrice = district.BuildPrice - 1;
         var currentPlayer = game.CurrentTurn.Player;
 
-        currentPlayer.Coins -= destoyPrice;
+        currentPlayer.Coins -= destroyPrice;
         if (player.HasDistrictOfType<GreatWall>() && district is not GreatWall)
         {
             currentPlayer.Coins--;
