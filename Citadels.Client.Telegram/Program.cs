@@ -17,11 +17,17 @@ var loggerConfiguration = new LoggerConfiguration()
     .MinimumLevel.Debug()
     .WriteTo.Console();
 
-var serviceProvider = new ServiceCollection()
+using var serviceProvider = new ServiceCollection()
     .AddSingleton(configuration)
     .AddSingleton(new ResourceManager(typeof(Citadels.Client.Telegram.Resources.Strings)))
     .AddSingleton<IUpdateHandler, TelegramUpdateHandler>()
     .AddSingleton<ILogger>(loggerConfiguration.CreateLogger())
+    .AddSingleton<ITelegramBotClient>(serviceProvider =>
+    {
+        var token = serviceProvider.GetRequiredService<IConfiguration>()["Telegram:BotToken"]!;
+        return new TelegramBotClient(token);
+    })
+    .AddSingleton<TelegramBotSettingsInitializer>()
     .BuildServiceProvider();
 
 var cancellationTokenSource = new CancellationTokenSource();
@@ -32,8 +38,10 @@ Console.CancelKeyPress += (_, e) =>
     e.Cancel = true;
 };
 
-var token = configuration["Telegram:BotToken"]!;
-var telegramBot = new TelegramBotClient(token);
+var botInitializer = serviceProvider.GetRequiredService<TelegramBotSettingsInitializer>();
+await botInitializer.SetCommands();
+
+var telegramBot = serviceProvider.GetRequiredService<ITelegramBotClient>();
 telegramBot.StartReceiving(serviceProvider.GetRequiredService<IUpdateHandler>(), cancellationToken: cancellationTokenSource.Token);
 
 try
