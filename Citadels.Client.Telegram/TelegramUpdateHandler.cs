@@ -9,6 +9,13 @@ namespace Citadels.Client.Telegram;
 
 internal class TelegramUpdateHandler : IUpdateHandler
 {
+    private readonly ResourceManager _resourceManager;
+
+    public TelegramUpdateHandler(ResourceManager resourceManager)
+    {
+        _resourceManager = resourceManager;
+    }
+
     public Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
     {
         return Task.CompletedTask;
@@ -20,8 +27,7 @@ internal class TelegramUpdateHandler : IUpdateHandler
         {
             return;
         }
-        var resourceManager = new ResourceManager(typeof(Strings));
         Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(update.Message.From!.LanguageCode ?? "en-US");
-        await botClient.SendTextMessageAsync(update.Message.Chat.Id, resourceManager.GetString("Welcome")!);
+        await botClient.SendTextMessageAsync(update.Message.Chat.Id, _resourceManager.GetString("Welcome")!);
     }
 }
