@@ -18,10 +18,22 @@ var serviceProvider = new ServiceCollection()
 
 var cancellationTokenSource = new CancellationTokenSource();
 
-Console.CancelKeyPress += (_, _) => cancellationTokenSource.Cancel();
+Console.CancelKeyPress += (_, e) =>
+{
+    cancellationTokenSource.Cancel();
+    e.Cancel = true;
+};
 
 var token = configuration["Telegram:BotToken"]!;
 var telegramBot = new TelegramBotClient(token);
 telegramBot.StartReceiving(serviceProvider.GetRequiredService<IUpdateHandler>(), cancellationToken: cancellationTokenSource.Token);
 
-Console.ReadKey(); //don't know yet how to do better
+try
+{
+    await Task.Delay(Timeout.Infinite, cancellationTokenSource.Token);
+} catch (TaskCanceledException)
+{
+}
+
+Console.WriteLine("Gracefull shutting down");
+await Task.Delay(5000);
