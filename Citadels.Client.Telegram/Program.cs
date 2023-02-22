@@ -1,4 +1,5 @@
 ﻿using Citadels.Client.Telegram;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
@@ -28,6 +29,10 @@ using var serviceProvider = new ServiceCollection()
         return new TelegramBotClient(token);
     })
     .AddSingleton<TelegramBotSettingsInitializer>()
+    .AddDbContext<TelegramClientDbContext>((serviceProvider, options) 
+        => options.UseNpgsql(serviceProvider
+            .GetRequiredService<IConfiguration>()
+            .GetConnectionString("Postgres")))
     .BuildServiceProvider();
 
 var cancellationTokenSource = new CancellationTokenSource();
