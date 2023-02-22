@@ -1,6 +1,7 @@
 ﻿using Citadels.Client.Telegram;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using System.Resources;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
@@ -11,9 +12,16 @@ IConfiguration configuration = new ConfigurationBuilder()
     .AddUserSecrets("6501faf3-a56a-49ca-9573-5e5bf8e73409")
     .Build();
 
+var loggerConfiguration = new LoggerConfiguration()
+    .Enrich.FromLogContext()
+    .MinimumLevel.Debug()
+    .WriteTo.Console();
+
 var serviceProvider = new ServiceCollection()
+    .AddSingleton(configuration)
     .AddSingleton(new ResourceManager(typeof(Citadels.Client.Telegram.Resources.Strings)))
     .AddSingleton<IUpdateHandler, TelegramUpdateHandler>()
+    .AddSingleton<ILogger>(loggerConfiguration.CreateLogger())
     .BuildServiceProvider();
 
 var cancellationTokenSource = new CancellationTokenSource();
