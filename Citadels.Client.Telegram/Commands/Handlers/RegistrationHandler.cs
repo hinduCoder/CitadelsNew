@@ -54,7 +54,11 @@ public class RegistrationHandler : ICommandHandler
             } 
             else
             {
-                await HandlerGameJoin(message, Guid.Parse(param), cancellationToken);
+                if (!Guid.TryParse(param, out var gameId))
+                {
+                    return;
+                }
+                await HandlerGameJoin(message, gameId, cancellationToken);
             }
         } else
         {
