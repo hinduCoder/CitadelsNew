@@ -117,6 +117,33 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CancelRegistration" xml:space="preserve">
+    <value>Cancelar registração</value>
+  </data>
+  <data name="GameCancelled" xml:space="preserve">
+    <value>O jogo é cancelado</value>
+  </data>
+  <data name="GameDoesNotExist" xml:space="preserve">
+    <value>O jogo não existe mais</value>
+  </data>
+  <data name="GameHasAlreadyStarted" xml:space="preserve">
+    <value>O jogo já começou</value>
+  </data>
+  <data name="GameInvitaion" xml:space="preserve">
+    <value>Jogem Citadels</value>
+  </data>
+  <data name="GameLinkText" xml:space="preserve">
+    <value>Clique aqui para juntar</value>
+  </data>
+  <data name="Rules" xml:space="preserve">
+    <value>Regras</value>
+  </data>
+  <data name="RulesLink" xml:space="preserve">
+    <value>https://images.zmangames.com/filer_public/d3/b0/d3b00592-62fa-409a-b5c6-3364e972955f/wr01_citadels_classic_rules.pdf</value>
+  </data>
+  <data name="Speaking" xml:space="preserve">
+    <value>está falando</value>
+  </data>
   <data name="StartNewGame" xml:space="preserve">
     <value>Começar novo jogo</value>
   </data>

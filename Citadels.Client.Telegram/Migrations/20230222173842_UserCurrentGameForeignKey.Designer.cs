@@ -3,6 +3,7 @@ using System;
 using Citadels.Client.Telegram;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Citadels.Client.Telegram.Migrations
 {
     [DbContext(typeof(TelegramClientDbContext))]
-    partial class TelegramClientDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230222173842_UserCurrentGameForeignKey")]
+    partial class UserCurrentGameForeignKey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,12 +58,6 @@ namespace Citadels.Client.Telegram.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<long>("PrivateChatId")
-                        .HasColumnType("bigint");
-
-                    b.Property<int?>("UpdatingTelegramMessageId")
-                        .HasColumnType("integer");
-
                     b.HasKey("TelegramUserId");
 
                     b.HasIndex("CurrentGameId");
@@ -83,8 +80,7 @@ namespace Citadels.Client.Telegram.Migrations
                 {
                     b.HasOne("Citadels.Client.Telegram.Entities.Game", "CurrentGame")
                         .WithMany("Users")
-                        .HasForeignKey("CurrentGameId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("CurrentGameId");
 
                     b.Navigation("CurrentGame");
                 });

@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Citadels.Client.Telegram.Resources;
+using System.Globalization;
 using System.Resources;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -8,12 +9,12 @@ namespace Citadels.Client.Telegram;
 public class TelegramBotSettingsInitializer
 {
     private readonly ITelegramBotClient _telegram;
-    private readonly ResourceManager _resourceManager;
+    private readonly IStringsProvider _stringProvider;
 
-    public TelegramBotSettingsInitializer(ITelegramBotClient telegram, ResourceManager resourceManager)
+    public TelegramBotSettingsInitializer(ITelegramBotClient telegram, IStringsProvider stringProvider)
     {
         _telegram = telegram;
-        _resourceManager = resourceManager;
+        _stringProvider = stringProvider;
     }
 
     public async Task SetCommands()
@@ -28,12 +29,11 @@ public class TelegramBotSettingsInitializer
 
         foreach (var languageCode in languageCodes)
         {
-            var culture = CultureInfo.CreateSpecificCulture(languageCode);
             await _telegram.SetMyCommandsAsync(
                 commandStrings.Select(x => new BotCommand 
                 { 
                     Command = x.Command, 
-                    Description = _resourceManager.GetString(x.Str, culture)! 
+                    Description = _stringProvider.Get(x.Str, languageCode)! 
                 }),
                 BotCommandScope.AllPrivateChats(),
                 languageCode == defaultLanguge ? null : languageCode);
