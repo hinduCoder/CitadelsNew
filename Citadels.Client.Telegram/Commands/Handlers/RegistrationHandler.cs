@@ -82,13 +82,13 @@ public class RegistrationHandler : ICommandHandler
         var myUsername = (await _botClient.GetMeAsync(cancellationToken: cancellationToken)).Username;
         var link = $"https://t.me/{myUsername}?start={game.Id}";
 
+        await _botClient.SendTextMessageAsync(message.Chat.Id,
+            Templates.Templates.GameInvitation(new(user.LanguageCode, link)),
+            ParseMode.Html, cancellationToken: cancellationToken);
+
         await Print(new[] { user }, user.TelegramUserId, cancellationToken);
 
-        await _botClient.SendTextMessageAsync(message.Chat.Id, 
-            Templates.Templates.GameInvitation(new (user.LanguageCode, link)), 
-            ParseMode.Html, cancellationToken: cancellationToken);
         await dbContext.SaveChangesAsync(cancellationToken);
-
     }
 
     private async Task HandlerGameJoin(TelegramTypes.Message message, Guid gameId, CancellationToken cancellationToken)
@@ -123,10 +123,7 @@ public class RegistrationHandler : ICommandHandler
             user = new User(sender.Id, chatId);
             dbContext.Add(user);
         }
-        else
-        {
-            dbContext.Update(user);
-        }
+
         user.Name = $"{sender.FirstName} {sender.LastName}".Trim();
         user.LanguageCode = sender.LanguageCode;
         
@@ -145,6 +142,7 @@ public class RegistrationHandler : ICommandHandler
 
     private async Task HandleRegistrationCancel(TelegramTypes.CallbackQuery callback, CancellationToken cancellationToken)
     {
+        await _botClient.AnswerCallbackQueryAsync(callback.Id);
         using var dbContext = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
 
         var callingUser = await dbContext.User.FindAsync(new object?[] { callback.From.Id }, cancellationToken: cancellationToken);
@@ -187,12 +185,7 @@ public class RegistrationHandler : ICommandHandler
 
     private async Task Print(IEnumerable<User> users, long hostId, CancellationToken cancellationToken)
     {
-        var keyboardButtons = new[] {
-            new []
-            {
-                InlineKeyboardButton.WithCallbackData("CancelRegistration", CallbackData.CancelRegistration)
-            }
-        };
+        
         var userModels = users.Select(x => new UserModel(x.TelegramUserId, x.Name ?? x.TelegramUserId.ToString(), x.TelegramUserId == hostId)).ToList();
         foreach (var user in users)
         {
@@ -203,8 +196,16 @@ public class RegistrationHandler : ICommandHandler
             var rulesButton = _keyboardLocalizator.Localize(
                 InlineKeyboardButton.WithUrl("Rules", _stringsProvider.Get("RulesLink", languageCode)!),
                 languageCode);
+
+            var keyboardButtons =
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Start", "start"),
+                InlineKeyboardButton.WithCallbackData("CancelRegistration", CallbackData.CancelRegistration)
+            };
             var keyboard = new InlineKeyboardMarkup(_keyboardLocalizator.Localize(keyboardButtons, languageCode)
-                .Concat(new[] { new[] { rulesButton } }));
+                .Concat(new[] { rulesButton }).Chunk(1));
+
             var message = await _botClient.SendOrEditMessageAsync(user.PrivateChatId, user.UpdatingTelegramMessageId,
                     messageText, ParseMode.Html, keyboard, cancellationToken);
             user.UpdatingTelegramMessageId = message.MessageId;
