@@ -6,19 +6,37 @@ import "google/api/annotations.proto";
 
 package citadels;
 
-service Calculator {
-  rpc AddOne (AddOneRequest) returns (AddOneResponse) {
-    option (google.api.http) = {
-      post: "/v1/calculator/addone",
-      body: "*"
-    };
-  };
+service Citadels {
+
+  rpc StartNewGame (NewGameRequest) returns (NewGameResponse) {
+	  option (google.api.http) = {
+		  post: "/v1/game",
+		  body: "*"
+		};
+  }
+  rpc StartDraft (StartDraftRequest) returns (DraftStateResponse);
+  rpc ChooseCharacter (ChooseCharacterRequest) returns (DraftStateResponse);
 }
 
-message AddOneRequest {
-  int32 number = 1;
+message NewGameRequest {
+	string game_id = 1;
+	repeated string player_names = 2;
+}
+message NewGameResponse {
+	string id = 1;
+}
+message StartDraftRequest {
+	string game_id = 1;
+}
+message ChooseCharacterRequest {
+	string game_id = 1;
+	int32 rank = 2;
+}
+message DraftStateResponse {
+	bool in_progress = 1;
+	string player_name = 2;
+	repeated int32 available_ranks = 3;
+	repeated int32 discarded_ranks = 4;
 }
 
-message AddOneResponse {
-  int32 number = 1;
-}
+
