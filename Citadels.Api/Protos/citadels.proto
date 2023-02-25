@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+option csharp_namespace = "Citadels.Api";
+
+import "google/api/annotations.proto";
+
+package citadels;
+
+service Calculator {
+  rpc AddOne (AddOneRequest) returns (AddOneResponse) {
+    option (google.api.http) = {
+      post: "/v1/calculator/addone",
+      body: "*"
+    };
+  };
+}
+
+message AddOneRequest {
+  int32 number = 1;
+}
+
+message AddOneResponse {
+  int32 number = 1;
+}
