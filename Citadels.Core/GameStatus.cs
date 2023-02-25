@@ -2,9 +2,9 @@
 
 public enum GameStatus
 {
-    NotStarted,
-    ReadyToDraft,
-    Draft,
-    Round,
-    Ended
+    NotStarted = 1,
+    ReadyToDraft = 2,
+    Draft = 3,
+    Round = 4,
+    Ended = 5
 }
