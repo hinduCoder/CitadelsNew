@@ -1,0 +1,1 @@
+{{res 'GameInvitaion'}}! <a href="{{Url}}">{{res 'GameLinkText'}}</a>

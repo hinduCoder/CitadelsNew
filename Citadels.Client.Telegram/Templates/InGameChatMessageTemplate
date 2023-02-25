@@ -1,0 +1,3 @@
+﻿👤 {{#with User}}<a href="tg://user?id={{Id}}">{{Name}}</a>{{/with}} <b>{{res 'Speaking'}}</b>:
+
+{{Message}}

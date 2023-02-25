@@ -13,6 +13,7 @@ public class Draft
     private int _currentPlayerIndex = 0;
 
     public int PlayersCount => _players.Count;
+    public Player? CurrentPlayer => Completed ? null : _players[_currentPlayerIndex];
     public bool Started => _currentPlayerIndex != 0 || ClosedDiscardedCharacter != null;
     public bool Completed => _currentPlayerIndex == _players.Count;
     public IReadOnlyList<Character> AvailableCharacters => _characters;
@@ -71,7 +72,7 @@ public class Draft
 
         var seed = _characters.Select(x => x.Rank).Aggregate(0, (result, current) => result * 10 + current);
         var random = new Random(seed);
-        var indexToReplace = random.Next(openCardsCount, _players.Count);
+        var indexToReplace = random.Next(openCardsCount, _characters.Count);
         (_characters[kingIndex], _characters[indexToReplace]) = (_characters[indexToReplace], _characters[kingIndex]);
     }
 }

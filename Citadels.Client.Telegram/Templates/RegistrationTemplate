@@ -1,0 +1,5 @@
+﻿{{res 'Welcome'}}
+
+{{#each Users}}
+🔸 <a href="tg://user?id={{Id}}">{{Name}}</a> {{#if IsHost}}👑{{/if}}
+{{/each}}
