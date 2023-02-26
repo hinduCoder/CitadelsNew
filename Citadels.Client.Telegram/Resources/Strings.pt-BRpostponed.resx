@@ -144,6 +144,9 @@
   <data name="Speaking" xml:space="preserve">
     <value>está falando</value>
   </data>
+  <data name="Start" xml:space="preserve">
+    <value>Começar</value>
+  </data>
   <data name="StartNewGame" xml:space="preserve">
     <value>Começar novo jogo</value>
   </data>

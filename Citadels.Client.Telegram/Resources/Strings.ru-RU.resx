@@ -118,36 +118,39 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CancelRegistration" xml:space="preserve">
-    <value>Cancel registration</value>
+    <value>Отменить регистрацию</value>
   </data>
   <data name="GameCancelled" xml:space="preserve">
-    <value>The game is cancelled</value>
+    <value>Игра отменена</value>
   </data>
   <data name="GameDoesNotExist" xml:space="preserve">
-    <value>The game doesn't exist anymore</value>
+    <value>Этой игры больше не существует</value>
   </data>
   <data name="GameHasAlreadyStarted" xml:space="preserve">
-    <value>The game has already started</value>
+    <value>Игра уже начата</value>
   </data>
   <data name="GameInvitaion" xml:space="preserve">
-    <value>Let's play Citadels</value>
+    <value>Давай поиграем в Цитадели</value>
   </data>
   <data name="GameLinkText" xml:space="preserve">
-    <value>Click to join the game</value>
+    <value>Нажми, чтобы присоединиться к игре</value>
   </data>
   <data name="Rules" xml:space="preserve">
-    <value>Rules</value>
+    <value>Правила</value>
   </data>
   <data name="RulesLink" xml:space="preserve">
-    <value>https://images.zmangames.com/filer_public/d3/b0/d3b00592-62fa-409a-b5c6-3364e972955f/wr01_citadels_classic_rules.pdf</value>
+    <value>https://www.mosigra.ru/download/%D0%9F%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0/citadels_classic_rules.pdf</value>
   </data>
   <data name="Speaking" xml:space="preserve">
-    <value>is speaking</value>
+    <value>говорит</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Начать</value>
   </data>
   <data name="StartNewGame" xml:space="preserve">
-    <value>Start new game</value>
+    <value>Начать новую игру</value>
   </data>
   <data name="Welcome" xml:space="preserve">
-    <value>Welcome to the game</value>
+    <value>Добро пожаловать в игру</value>
   </data>
 </root>
