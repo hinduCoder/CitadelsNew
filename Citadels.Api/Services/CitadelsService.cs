@@ -7,19 +7,16 @@ namespace Citadels.Api.Services;
 public class CitadelsService : Citadels.CitadelsBase
 {
     private readonly ILogger<CitadelsService> _logger;
-    private readonly GameEventHandler _gameEventHandler;
-    private readonly IGameStorage _gameStorage;
+    private readonly IGameHostStorage _gameHostStorage;
 
     public CitadelsService(ILogger<CitadelsService> logger,
-        GameEventHandler gameEventHandler,
-        IGameStorage gameStorage)
+        IGameHostStorage gameHostStorage)
     {
         _logger = logger;
-        _gameEventHandler = gameEventHandler;
-        _gameStorage = gameStorage;
+        _gameHostStorage = gameHostStorage;
     }
 
-    public override Task<NewGameResponse> StartNewGame(NewGameRequest request, ServerCallContext context)
+    public override async Task<NewGameResponse> StartNewGame(NewGameRequest request, ServerCallContext context)
     {
         var newId = request.GameId;
         if (string.IsNullOrEmpty(newId))
@@ -27,23 +24,26 @@ public class CitadelsService : Citadels.CitadelsBase
             newId = Guid.NewGuid().ToString();
         }
 
-        _gameEventHandler.HandleEvent(_gameStorage[newId], new StartGame(request.PlayerNames, (int)(DateTime.Now.Ticks % int.MaxValue)));
-        return Task.FromResult(new NewGameResponse { Id = newId });
+        var host = _gameHostStorage[newId];
+
+        await host.EnqueueAsync(new StartGame(request.PlayerNames, (int)(DateTime.Now.Ticks % int.MaxValue)));
+        
+        return new NewGameResponse { Id = newId };
     }
 
-    public override Task<DraftStateResponse> StartDraft(StartDraftRequest request, ServerCallContext context)
+    public override async Task<DraftStateResponse> StartDraft(StartDraftRequest request, ServerCallContext context)
     {
-        Game game = _gameStorage[request.GameId];
-        _gameEventHandler.HandleEvent(game, new StartDraft((int)(DateTime.Now.Ticks % int.MaxValue)));
-        _gameEventHandler.HandleEvent(game, new DiscardDraftFirstCards());
-        return Task.FromResult(MapDraftState(game));
+        var host = _gameHostStorage[request.GameId];
+        await host.EnqueueAsync(new StartDraft((int)(DateTime.Now.Ticks % int.MaxValue)));
+        await host.EnqueueAsync(new DiscardDraftFirstCards());
+        return MapDraftState(host.Game); //вот тут будет плохо. Игра еще может не поменяться, у нас все асинхронное
     }
 
-    public override Task<DraftStateResponse> ChooseCharacter(ChooseCharacterRequest request, ServerCallContext context)
+    public override async Task<DraftStateResponse> ChooseCharacter(ChooseCharacterRequest request, ServerCallContext context)
     {
-        var game = _gameStorage[request.GameId];
-        _gameEventHandler.HandleEvent(game, new ChooseCharacter(request.Rank));
-        return Task.FromResult(MapDraftState(game));
+        var gameHost = _gameHostStorage[request.GameId];
+        await gameHost.EnqueueAsync(new ChooseCharacter(request.Rank));
+        return MapDraftState(gameHost.Game);
     }
 
     private static DraftStateResponse MapDraftState(Game game)

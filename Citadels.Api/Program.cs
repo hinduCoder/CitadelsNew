@@ -9,7 +9,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddGrpcSwagger();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton<IGameStorage, GameStorage>();
+builder.Services.AddSingleton<IGameHostStorage, GameHostStorage>();
 builder.Services.AddSingleton<GameEventHandler>();
 
 var app = builder.Build();
