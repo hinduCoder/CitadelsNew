@@ -8,10 +8,12 @@ namespace Citadels.Client.Telegram.Templates;
 public static class Templates
 {
     [AllowNull]
-    public static HandlebarsTemplate<RegistrationContext, object> RegistrationTemplate { get; private set; }
+    public static HandlebarsTemplate<RegistrationContext, LanguageData> RegistrationTemplate { get; private set; }
     [AllowNull]
-    public static HandlebarsTemplate<ChatMessage, object> InGameChatMessageTemplate { get; private set; }
+    public static HandlebarsTemplate<ChatMessage, LanguageData> InGameChatMessageTemplate { get; private set; }
     [AllowNull]
+    public static HandlebarsTemplate<GameInvitation, LanguageData> GameInvitation { get; private set; }
+
     public static HandlebarsTemplate<GameInvitation, object> GameInvitation { get; private set; }
     
     static Templates()

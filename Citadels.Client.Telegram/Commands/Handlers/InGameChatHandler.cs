@@ -48,8 +48,7 @@ public class InGameChatHandler : ICommandHandler
         {
             await _botClient.SendTextMessageAsync(
                 targetUser.PrivateChatId, 
-                Templates.Templates.InGameChatMessageTemplate(new ChatMessage(
-                    targetUser.LanguageCode, fromUserModel, message.Text)), 
+                Templates.Templates.InGameChatMessageTemplate(new ChatMessage(fromUserModel, message.Text), targetUser.LanguageCode), 
                 ParseMode.Html, cancellationToken: cancellationToken);
         }
 

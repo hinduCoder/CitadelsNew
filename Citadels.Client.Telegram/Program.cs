@@ -2,17 +2,14 @@
 using Citadels.Client.Telegram.CommandHandlers;
 using Citadels.Client.Telegram.Resources;
 using Citadels.Client.Telegram.TelegramExnteions;
-using HandlebarsDotNet;
+using Citadels.Client.Telegram.Templates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using System;
 using System.Resources;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 
 IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
@@ -29,6 +26,7 @@ using var serviceProvider = new ServiceCollection()
     .AddSingleton(configuration)
     .AddSingleton<IStringsProvider>(new StringProvider(new ResourceManager(typeof(Citadels.Client.Telegram.Resources.Strings))))
     .AddSingleton<IKeyboardLocalizator, KeyboardLocalizator>()
+    .AddSingleton<HandlerbarsInitializer>()
     .Scan(x => x.FromCallingAssembly()
                 .AddClasses(x => x.AssignableTo<ICommandHandler>())
                 .As<ICommandHandler>()
@@ -46,11 +44,7 @@ using var serviceProvider = new ServiceCollection()
             .GetConnectionString("Postgres")))
     .BuildServiceProvider();
 
-var stringProvider = serviceProvider.GetRequiredService<IStringsProvider>();
-Handlebars.RegisterHelper("res", (writer, context, args) =>
-{
-    writer.WriteSafeString(stringProvider.Get(args.At<string>(0), context.GetValue<string>("Language")));
-});
+serviceProvider.GetRequiredService<HandlerbarsInitializer>().Initialize();
 
 var cancellationTokenSource = new CancellationTokenSource();
 

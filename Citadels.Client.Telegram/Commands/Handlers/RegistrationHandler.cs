@@ -83,7 +83,7 @@ public class RegistrationHandler : ICommandHandler
         var link = $"https://t.me/{myUsername}?start={game.Id}";
 
         await _botClient.SendTextMessageAsync(message.Chat.Id,
-            Templates.Templates.GameInvitation(new(user.LanguageCode, link)),
+            Templates.Templates.GameInvitation(new(link), user.LanguageCode),
             ParseMode.Html, cancellationToken: cancellationToken);
 
         await Print(new[] { user }, user.TelegramUserId, cancellationToken);
@@ -191,7 +191,7 @@ public class RegistrationHandler : ICommandHandler
         {
             var languageCode = user.LanguageCode;
             var messageText = Templates.Templates.RegistrationTemplate(
-                new RegistrationContext(languageCode, userModels));
+                new (userModels), languageCode);
 
             var rulesButton = _keyboardLocalizator.Localize(
                 InlineKeyboardButton.WithUrl("Rules", _stringsProvider.Get("RulesLink", languageCode)!),
