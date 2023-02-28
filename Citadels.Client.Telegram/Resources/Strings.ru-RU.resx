@@ -216,4 +216,7 @@
   <data name="OnlyHostCanStart" xml:space="preserve">
     <value>Начать игру может только организатор</value>
   </data>
+  <data name="ChoosingCharacter" xml:space="preserve">
+    <value>{0} выбирает героя</value>
+  </data>
 </root>

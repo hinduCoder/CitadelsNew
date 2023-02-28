@@ -216,4 +216,7 @@
   <data name="OnlyHostCanStart" xml:space="preserve">
     <value>Only host can start the game</value>
   </data>
+  <data name="ChoosingCharacter" xml:space="preserve">
+    <value>{0} is choosing a hero</value>
+  </data>
 </root>

@@ -107,7 +107,7 @@ public class DraftHandler : ICommandHandler
 
         foreach (var user in gameUsers.Where(u => u.TelegramUserId != targetUser.TelegramUserId))
         {
-            await _telegram.SendTextMessageAsync(user.PrivateChatId, $"{targetUser.TelegramLinkMarkdown} выбирает героя", ParseMode.MarkdownV2);
+            await _telegram.SendTextMessageAsync(user.PrivateChatId, _stringsProvider.Get("ChoosingCharacter", user.LanguageCode, targetUser.TelegramLinkMarkdown)!, ParseMode.MarkdownV2);
         }
     }
 }
