@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AvailableCharacters" xml:space="preserve">
+    <value>Доступные герои</value>
+  </data>
   <data name="CancelRegistration" xml:space="preserve">
     <value>Отменить регистрацию</value>
   </data>
@@ -150,7 +153,67 @@
   <data name="StartNewGame" xml:space="preserve">
     <value>Начать новую игру</value>
   </data>
+  <data name="UnavailableCharacters" xml:space="preserve">
+    <value>Сброшенные герои</value>
+  </data>
   <data name="Welcome" xml:space="preserve">
     <value>Добро пожаловать в игру</value>
+  </data>
+  <data name="CharacterName1" xml:space="preserve">
+    <value>Ассасин</value>
+  </data>
+  <data name="CharacterDescription1" xml:space="preserve">
+    <value>Можете назвать персонажа, которого хотите убить. Когда его вызывают, его владелец молчит. Ход убитого персонажа пропускается</value>
+  </data>
+  <data name="CharacterName2" xml:space="preserve">
+    <value>Вор</value>
+  </data>
+  <data name="CharacterDescription2" xml:space="preserve">
+    <value>Можете назвать персонажа, которого хотите обворовать. Когда этого персонажа вызывают, заберите у его владельца всё золото</value>
+  </data>
+  <data name="CharacterName3" xml:space="preserve">
+    <value>Чародей</value>
+  </data>
+  <data name="CharacterDescription3" xml:space="preserve">
+    <value>Можете либо обменять все карты с руки на карты с руки другого игрока, либо вернуть сколько угодно карт с руки под колоду кварталов и взять из неё столько же новых</value>
+  </data>
+  <data name="CharacterName4" xml:space="preserve">
+    <value>Король</value>
+  </data>
+  <data name="CharacterDescription4" xml:space="preserve">
+    <value>Когда вызывают короля, можете тут же взять корону. Получите 1 золотой за каждый ваш дворянский квартал</value>
+  </data>
+  <data name="CharacterName5" xml:space="preserve">
+    <value>Епископ</value>
+  </data>
+  <data name="CharacterDescription5" xml:space="preserve">
+    <value>Кондотьер не может разрушить ваши кварталы. Получите 1 золотой за каждый ваш церковный квартал</value>
+  </data>
+  <data name="CharacterName6" xml:space="preserve">
+    <value>Купец</value>
+  </data>
+  <data name="CharacterDescription6" xml:space="preserve">
+    <value>Получите 1 дополнительный золотой. Получите 1 золотой за каждый ваш торговый квартал</value>
+  </data>
+  <data name="CharacterName7" xml:space="preserve">
+    <value>Зодчий</value>
+  </data>
+  <data name="CharacterDescription7" xml:space="preserve">
+    <value>Возьмите 2 дополнительные карты кварталов из колоды. Можете построить 3 квартала или меньше</value>
+  </data>
+  <data name="CharacterName8" xml:space="preserve">
+    <value>Кондотьер</value>
+  </data>
+  <data name="CharacterDescription8" xml:space="preserve">
+    <value>Можете разрушить 1 квартал по вашему выбору, заплатив в банк на 1 золотой меньше стоимости квартала. Получите 1 золотой за каждый ваш воинский квартал</value>
+  </data>
+  <data name="DraftEnded" xml:space="preserve">
+    <value>Драфт окончин</value>
+  </data>
+  <data name="DraftStarted" xml:space="preserve">
+    <value>Начинаем драфт</value>
+  </data>
+  <data name="OnlyHostCanStart" xml:space="preserve">
+    <value>Начать игру может только организатор</value>
   </data>
 </root>

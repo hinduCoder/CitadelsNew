@@ -13,9 +13,9 @@ public static class Templates
     public static HandlebarsTemplate<ChatMessage, LanguageData> InGameChatMessageTemplate { get; private set; }
     [AllowNull]
     public static HandlebarsTemplate<GameInvitation, LanguageData> GameInvitation { get; private set; }
+    [AllowNull]
+    public static HandlebarsTemplate<DraftModel, LanguageData> DraftCharacterCards { get; private set; }
 
-    public static HandlebarsTemplate<GameInvitation, object> GameInvitation { get; private set; }
-    
     static Templates()
     {
         var props = typeof(Templates).GetProperties(BindingFlags.Public | BindingFlags.Static);

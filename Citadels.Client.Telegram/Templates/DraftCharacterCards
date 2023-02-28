@@ -1,0 +1,12 @@
+<b>{{res 'AvailableCharacters'}}</b>
+
+{{#each Available}}
+{{emoji Rank}} <strong>{{res 'CharacterName' Rank}}</strong>
+<em>{{res 'CharacterDescription' Rank}}</em>
+
+{{/each}}
+<b>{{res 'UnavailableCharacters'}}</b>
+
+{{#each Unavailable}}
+{{emoji Rank}} <del><strong>{{res 'CharacterName' Rank}}</strong></del>
+{{/each}}

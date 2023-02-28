@@ -1,4 +1,5 @@
 ﻿using Citadels.Client.Telegram.Resources;
+using Citadels.Client.Telegram.TelegramExnteions;
 using HandlebarsDotNet;
 
 namespace Citadels.Client.Telegram.Templates;
@@ -35,6 +36,10 @@ public class HandlerbarsInitializer
                 10 => "🔟",
                 _ => number
             });
+        });
+        Handlebars.RegisterHelper("ulink", (writer, _, args) =>
+        {
+            writer.WriteSafeString(UserLink.CreateHtml(args.At<long>(0), args.At<string>(1)));
         });
     }
 

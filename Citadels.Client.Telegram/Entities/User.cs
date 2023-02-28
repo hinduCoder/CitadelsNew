@@ -1,4 +1,6 @@
-﻿namespace Citadels.Client.Telegram.Entities;
+﻿using Citadels.Client.Telegram.TelegramExnteions;
+
+namespace Citadels.Client.Telegram.Entities;
 
 public class User
 {
@@ -9,6 +11,9 @@ public class User
     public string? LanguageCode { get; set; }
     public Guid? CurrentGameId { get; set;  }
     public Game? CurrentGame { get; set; }
+
+    public string TelegramLinkMarkdown => UserLink.CreateMarkdown(TelegramUserId, Name ?? TelegramUserId.ToString());
+    public string TelegramLinkHtml => UserLink.CreateHtml(TelegramUserId, Name ?? TelegramUserId.ToString());
 
     public User(long telegramUserId, long privateChatId)
     {

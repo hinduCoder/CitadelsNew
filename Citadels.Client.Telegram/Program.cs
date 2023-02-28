@@ -3,6 +3,7 @@ using Citadels.Client.Telegram.CommandHandlers;
 using Citadels.Client.Telegram.Resources;
 using Citadels.Client.Telegram.TelegramExnteions;
 using Citadels.Client.Telegram.Templates;
+using Grpc.Net.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,7 +25,7 @@ var loggerConfiguration = new LoggerConfiguration()
 
 using var serviceProvider = new ServiceCollection()
     .AddSingleton(configuration)
-    .AddSingleton<IStringsProvider>(new StringProvider(new ResourceManager(typeof(Citadels.Client.Telegram.Resources.Strings))))
+    .AddSingleton<IStringsProvider>(new StringProvider(new ResourceManager(typeof(Strings))))
     .AddSingleton<IKeyboardLocalizator, KeyboardLocalizator>()
     .AddSingleton<HandlerbarsInitializer>()
     .Scan(x => x.FromCallingAssembly()
@@ -42,6 +43,8 @@ using var serviceProvider = new ServiceCollection()
         => options.UseNpgsql(serviceProvider
             .GetRequiredService<IConfiguration>()
             .GetConnectionString("Postgres")))
+    .AddScoped(serviceProvider => GrpcChannel.ForAddress(serviceProvider.GetRequiredService<IConfiguration>()["Api:Host"]!))
+    .AddScoped(serviceProvider => new Citadels.Api.Citadels.CitadelsClient(serviceProvider.GetRequiredService<GrpcChannel>()))
     .BuildServiceProvider();
 
 serviceProvider.GetRequiredService<HandlerbarsInitializer>().Initialize();
@@ -90,7 +93,7 @@ await telegramBot.ReceiveAsync(async (_, update, cancellationToken) =>
         logger.Error(ex, "Telegram update handler error");
         return Task.CompletedTask;
     }, 
-    new ReceiverOptions { ThrowPendingUpdates = false }, 
+    new ReceiverOptions { ThrowPendingUpdates = true }, 
     cancellationToken: cancellationTokenSource.Token);
 
 logger.Information("Gracefull shutting down");

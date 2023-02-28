@@ -6,8 +6,8 @@ namespace Citadels.Client.Telegram;
 
 public class TelegramBotSettingsInitializer
 {
-    private static readonly string[] LanguageCodes = { "ru", "en", "pt" };
-    private const string DefaultLanguage = "ru";
+    private static readonly string[] LanguageCodes = { "ru", "en" };
+    private const string DefaultLanguage = "en";
 
     private readonly ITelegramBotClient _telegram;
     private readonly IStringsProvider _stringProvider;
@@ -34,6 +34,17 @@ public class TelegramBotSettingsInitializer
                     Description = _stringProvider.Get(x.Str, languageCode)! 
                 }),
                 BotCommandScope.AllPrivateChats(),
+                languageCode == DefaultLanguage ? null : languageCode);
+            await _telegram.SetMyCommandsAsync(
+                commandStrings.Select(x => new BotCommand
+                {
+                    Command = x.Command,
+                    Description = _stringProvider.Get(x.Str, languageCode)!
+                }).Concat(new[]
+                {
+                    new BotCommand { Command = "test", Description = "Test" }
+                }),
+                BotCommandScope.Chat(628413),
                 languageCode == DefaultLanguage ? null : languageCode);
         }
     }

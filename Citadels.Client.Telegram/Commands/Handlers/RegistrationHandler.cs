@@ -37,7 +37,7 @@ public class RegistrationHandler : ICommandHandler
         => update.Message is { Text: not null, Chat.Type: ChatType.Private } message && message.Text.StartsWith("/start")
             || update.CallbackQuery is { Data: CallbackData.CancelRegistration } ;
 
-    public int Order => 1;
+    public int Order => 12;
 
     public async Task Handle(TelegramTypes.Update update, CancellationToken cancellationToken)
     {
