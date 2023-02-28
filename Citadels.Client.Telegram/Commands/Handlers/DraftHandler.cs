@@ -14,34 +14,30 @@ namespace Citadels.Client.Telegram.Commands.Handlers;
 public class DraftHandler : ICommandHandler
 {
     private readonly ITelegramBotClient _telegram;
-    private readonly IDbContextFactory<TelegramClientDbContext> _dbContextFactory;
+    private readonly TelegramClientDbContext _dbContext;
     private readonly IStringsProvider _stringsProvider;
     private readonly IKeyboardLocalizator _keyboardLocalizator;
     private readonly CitadelsApi.CitadelsClient _api;
 
     public DraftHandler(ITelegramBotClient telegramBotClient,
-        IDbContextFactory<TelegramClientDbContext> dbContextFactory,
+        TelegramClientDbContext dbContext,
         IKeyboardLocalizator keyboardLocalizator,
         CitadelsApi.CitadelsClient citadelsClient,
         IStringsProvider stringsProvider)
     {
         _telegram = telegramBotClient;
-        _dbContextFactory = dbContextFactory;
+        _dbContext = dbContext;
         _keyboardLocalizator = keyboardLocalizator;
         _api = citadelsClient;
         _stringsProvider = stringsProvider;
     }
 
-    public int Order => 1;
-    public bool CanHandle(TelegramTypes.Update update) => update is { CallbackQuery.Data: not null };
     public async Task Handle(TelegramTypes.Update update, CancellationToken cancellationToken)
     {
-        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
-
         var callback = update.CallbackQuery!;
         if (callback.Data is "start")
         {
-            var game = await dbContext.Game
+            var game = await _dbContext.Game
                 .Include(x => x.Users)
                 .SingleOrDefaultAsync(x => x.HostUserId == callback.From.Id);
             if (game is null)
@@ -75,15 +71,15 @@ public class DraftHandler : ICommandHandler
             await _telegram.EditMessageReplyMarkupAsync(callback.Message!.Chat.Id, callback.Message.MessageId, cancellationToken: cancellationToken);
             await _telegram.AnswerCallbackQueryAsync(callback.Id);
 
-            var callingUser = await dbContext.User.FindAsync(callback.From.Id);
+            var callingUser = await _dbContext.User.FindAsync(callback.From.Id);
             var state = await _api.ChooseCharacterAsync(new Api.ChooseCharacterRequest { GameId = callingUser!.CurrentGameId.ToString(), Rank = rank });
 
             var game = callingUser.CurrentGame!;
-            await dbContext.Entry(game).Collection(x => x.Users).LoadAsync();
+            await _dbContext.Entry(game).Collection(x => x.Users).LoadAsync();
             var gameUsers = game.Users.ToList();
             if (state.InProgress)
             {
-                var targetUser = await dbContext.User.Where(x => x.Name == state.PlayerName && x.CurrentGameId == callingUser.CurrentGameId).SingleAsync();
+                var targetUser = await _dbContext.User.Where(x => x.Name == state.PlayerName && x.CurrentGameId == callingUser.CurrentGameId).SingleAsync();
                 await SendMessages(targetUser, gameUsers, state.AvailableRanks, state.DiscardedRanks);
             }
             else

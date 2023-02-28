@@ -1,5 +1,7 @@
 ﻿using Citadels.Client.Telegram;
 using Citadels.Client.Telegram.CommandHandlers;
+using Citadels.Client.Telegram.Commands;
+using Citadels.Client.Telegram.Commands.Handlers;
 using Citadels.Client.Telegram.Resources;
 using Citadels.Client.Telegram.TelegramExnteions;
 using Citadels.Client.Telegram.Templates;
@@ -11,6 +13,7 @@ using Serilog;
 using System.Resources;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
+using Telegram.Bot.Types.Enums;
 
 IConfiguration configuration = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
@@ -30,7 +33,7 @@ using var serviceProvider = new ServiceCollection()
     .AddSingleton<HandlerbarsInitializer>()
     .Scan(x => x.FromCallingAssembly()
                 .AddClasses(x => x.AssignableTo<ICommandHandler>())
-                .As<ICommandHandler>()
+                .AsSelf()
                 .WithScopedLifetime())
     .AddSingleton<ILogger>(loggerConfiguration.CreateLogger())
     .AddSingleton<ITelegramBotClient>(serviceProvider =>
@@ -39,7 +42,7 @@ using var serviceProvider = new ServiceCollection()
         return new TelegramBotClient(token);
     })
     .AddSingleton<TelegramBotSettingsInitializer>()
-    .AddDbContextFactory<TelegramClientDbContext>((serviceProvider, options) 
+    .AddDbContext<TelegramClientDbContext>((serviceProvider, options) 
         => options.UseNpgsql(serviceProvider
             .GetRequiredService<IConfiguration>()
             .GetConnectionString("Postgres")))
@@ -67,7 +70,11 @@ await botInitializer.SetCommands();
 logger.Information("Bot initialization done");
 logger.Information("Starting listening");
 
-var commandHandler = serviceProvider.GetServices<ICommandHandler>().OrderByDescending(x => x.Order).ToList();
+var router = new RouterBuilder()
+    .Map<RegistrationHandler>(update => update.Message is { Text: not null, Chat.Type: ChatType.Private } message && message.Text.StartsWith("/start") || update.CallbackQuery is { Data: CallbackData.CancelRegistration })
+    .Map<DraftHandler>(update => update is { CallbackQuery.Data: not null })
+    .Map<InGameChatHandler>(update => update.Message is not null)
+    .Build(null);
 
 var telegramBot = serviceProvider.GetRequiredService<ITelegramBotClient>();
 await telegramBot.ReceiveAsync(async (_, update, cancellationToken) =>
@@ -81,8 +88,8 @@ await telegramBot.ReceiveAsync(async (_, update, cancellationToken) =>
                 logger.Information("Callback query {Data}", query.Data);
                 break;
         }
-
-        var updateHandler = commandHandler.FirstOrDefault(x => x.CanHandle(update));
+        using var scope = serviceProvider.CreateScope();
+        var updateHandler = router.GetHandler(update, scope.ServiceProvider);
         if (updateHandler is null)
         {
             return;
