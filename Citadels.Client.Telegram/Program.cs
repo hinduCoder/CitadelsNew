@@ -74,7 +74,7 @@ var router = new RouterBuilder()
     .Map<RegistrationHandler>(update => update.Message is { Text: not null, Chat.Type: ChatType.Private } message && message.Text.StartsWith("/start") || update.CallbackQuery is { Data: CallbackData.CancelRegistration })
     .Map<DraftHandler>(update => update is { CallbackQuery.Data: not null })
     .Map<InGameChatHandler>(update => update.Message is not null)
-    .Build(null);
+    .Build();
 
 var telegramBot = serviceProvider.GetRequiredService<ITelegramBotClient>();
 await telegramBot.ReceiveAsync(async (_, update, cancellationToken) =>

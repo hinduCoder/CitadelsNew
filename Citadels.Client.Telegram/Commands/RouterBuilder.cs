@@ -12,5 +12,5 @@ public class RouterBuilder
         _handlers.Add((condition, typeof(T)));
         return this;
     }
-    public Router Build(IServiceProvider serviceProvider) => new Router(_handlers, serviceProvider);
+    public Router Build() => new Router(_handlers);
 }
