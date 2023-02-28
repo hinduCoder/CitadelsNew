@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -118,36 +118,39 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CancelRegistration" xml:space="preserve">
-    <value>Cancel registration</value>
+    <value>Cancelar registração</value>
   </data>
   <data name="GameCancelled" xml:space="preserve">
-    <value>The game is cancelled</value>
+    <value>O jogo é cancelado</value>
   </data>
   <data name="GameDoesNotExist" xml:space="preserve">
-    <value>The game doesn't exist anymore</value>
+    <value>O jogo não existe mais</value>
   </data>
   <data name="GameHasAlreadyStarted" xml:space="preserve">
-    <value>The game has already started</value>
+    <value>O jogo já começou</value>
   </data>
   <data name="GameInvitaion" xml:space="preserve">
-    <value>Let's play Citadels</value>
+    <value>Jogem Citadels</value>
   </data>
   <data name="GameLinkText" xml:space="preserve">
-    <value>Click to join the game</value>
+    <value>Clique aqui para juntar</value>
   </data>
   <data name="Rules" xml:space="preserve">
-    <value>Rules</value>
+    <value>Regras</value>
   </data>
   <data name="RulesLink" xml:space="preserve">
     <value>https://images.zmangames.com/filer_public/d3/b0/d3b00592-62fa-409a-b5c6-3364e972955f/wr01_citadels_classic_rules.pdf</value>
   </data>
   <data name="Speaking" xml:space="preserve">
-    <value>is speaking</value>
+    <value>está falando</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Começar</value>
   </data>
   <data name="StartNewGame" xml:space="preserve">
-    <value>Start new game</value>
+    <value>Começar novo jogo</value>
   </data>
   <data name="Welcome" xml:space="preserve">
-    <value>Welcome to the game</value>
+    <value>Bem vindo no jogo</value>
   </data>
 </root>

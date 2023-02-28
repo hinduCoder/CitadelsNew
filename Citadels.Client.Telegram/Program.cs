@@ -1,17 +1,18 @@
 ﻿using Citadels.Client.Telegram;
 using Citadels.Client.Telegram.CommandHandlers;
+using Citadels.Client.Telegram.Commands;
+using Citadels.Client.Telegram.Commands.Handlers;
 using Citadels.Client.Telegram.Resources;
 using Citadels.Client.Telegram.TelegramExnteions;
-using HandlebarsDotNet;
+using Citadels.Client.Telegram.Templates;
+using Grpc.Net.Client;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using System;
 using System.Resources;
 using Telegram.Bot;
 using Telegram.Bot.Polling;
-using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
 IConfiguration configuration = new ConfigurationBuilder()
@@ -27,11 +28,12 @@ var loggerConfiguration = new LoggerConfiguration()
 
 using var serviceProvider = new ServiceCollection()
     .AddSingleton(configuration)
-    .AddSingleton<IStringsProvider>(new StringProvider(new ResourceManager(typeof(Citadels.Client.Telegram.Resources.Strings))))
+    .AddSingleton<IStringsProvider>(new StringProvider(new ResourceManager(typeof(Strings))))
     .AddSingleton<IKeyboardLocalizator, KeyboardLocalizator>()
+    .AddSingleton<HandlerbarsInitializer>()
     .Scan(x => x.FromCallingAssembly()
                 .AddClasses(x => x.AssignableTo<ICommandHandler>())
-                .As<ICommandHandler>()
+                .AsSelf()
                 .WithScopedLifetime())
     .AddSingleton<ILogger>(loggerConfiguration.CreateLogger())
     .AddSingleton<ITelegramBotClient>(serviceProvider =>
@@ -40,17 +42,15 @@ using var serviceProvider = new ServiceCollection()
         return new TelegramBotClient(token);
     })
     .AddSingleton<TelegramBotSettingsInitializer>()
-    .AddDbContextFactory<TelegramClientDbContext>((serviceProvider, options) 
+    .AddDbContext<TelegramClientDbContext>((serviceProvider, options) 
         => options.UseNpgsql(serviceProvider
             .GetRequiredService<IConfiguration>()
             .GetConnectionString("Postgres")))
+    .AddScoped(serviceProvider => GrpcChannel.ForAddress(serviceProvider.GetRequiredService<IConfiguration>()["Api:Host"]!))
+    .AddScoped(serviceProvider => new Citadels.Api.Citadels.CitadelsClient(serviceProvider.GetRequiredService<GrpcChannel>()))
     .BuildServiceProvider();
 
-var stringProvider = serviceProvider.GetRequiredService<IStringsProvider>();
-Handlebars.RegisterHelper("res", (writer, context, args) =>
-{
-    writer.WriteSafeString(stringProvider.Get(args.At<string>(0), context.GetValue<string>("Language")));
-});
+serviceProvider.GetRequiredService<HandlerbarsInitializer>().Initialize();
 
 var cancellationTokenSource = new CancellationTokenSource();
 
@@ -70,7 +70,11 @@ await botInitializer.SetCommands();
 logger.Information("Bot initialization done");
 logger.Information("Starting listening");
 
-var commandHandler = serviceProvider.GetServices<ICommandHandler>().OrderByDescending(x => x.Order).ToList();
+var router = new RouterBuilder()
+    .Map<RegistrationHandler>(update => update.Message is { Text: not null, Chat.Type: ChatType.Private } message && message.Text.StartsWith("/start") || update.CallbackQuery is { Data: CallbackData.CancelRegistration })
+    .Map<DraftHandler>(update => update is { CallbackQuery.Data: not null })
+    .Map<InGameChatHandler>(update => update.Message is not null)
+    .Build();
 
 var telegramBot = serviceProvider.GetRequiredService<ITelegramBotClient>();
 await telegramBot.ReceiveAsync(async (_, update, cancellationToken) =>
@@ -84,8 +88,8 @@ await telegramBot.ReceiveAsync(async (_, update, cancellationToken) =>
                 logger.Information("Callback query {Data}", query.Data);
                 break;
         }
-
-        var updateHandler = commandHandler.FirstOrDefault(x => x.CanHandle(update));
+        using var scope = serviceProvider.CreateScope();
+        var updateHandler = router.GetHandler(update, scope.ServiceProvider);
         if (updateHandler is null)
         {
             return;
@@ -96,7 +100,7 @@ await telegramBot.ReceiveAsync(async (_, update, cancellationToken) =>
         logger.Error(ex, "Telegram update handler error");
         return Task.CompletedTask;
     }, 
-    new ReceiverOptions { ThrowPendingUpdates = false }, 
+    new ReceiverOptions { ThrowPendingUpdates = true }, 
     cancellationToken: cancellationTokenSource.Token);
 
 logger.Information("Gracefull shutting down");

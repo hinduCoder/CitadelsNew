@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <root>
   <!-- 
     Microsoft ResX Schema 
@@ -117,37 +117,106 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AvailableCharacters" xml:space="preserve">
+    <value>Доступные герои</value>
+  </data>
   <data name="CancelRegistration" xml:space="preserve">
-    <value>Cancelar registração</value>
+    <value>Отменить регистрацию</value>
   </data>
   <data name="GameCancelled" xml:space="preserve">
-    <value>O jogo é cancelado</value>
+    <value>Игра отменена</value>
   </data>
   <data name="GameDoesNotExist" xml:space="preserve">
-    <value>O jogo não existe mais</value>
+    <value>Этой игры больше не существует</value>
   </data>
   <data name="GameHasAlreadyStarted" xml:space="preserve">
-    <value>O jogo já começou</value>
+    <value>Игра уже начата</value>
   </data>
   <data name="GameInvitaion" xml:space="preserve">
-    <value>Jogem Citadels</value>
+    <value>Давай поиграем в Цитадели</value>
   </data>
   <data name="GameLinkText" xml:space="preserve">
-    <value>Clique aqui para juntar</value>
+    <value>Нажми, чтобы присоединиться к игре</value>
   </data>
   <data name="Rules" xml:space="preserve">
-    <value>Regras</value>
+    <value>Правила</value>
   </data>
   <data name="RulesLink" xml:space="preserve">
-    <value>https://images.zmangames.com/filer_public/d3/b0/d3b00592-62fa-409a-b5c6-3364e972955f/wr01_citadels_classic_rules.pdf</value>
+    <value>https://www.mosigra.ru/download/%D0%9F%D1%80%D0%B0%D0%B2%D0%B8%D0%BB%D0%B0/citadels_classic_rules.pdf</value>
   </data>
   <data name="Speaking" xml:space="preserve">
-    <value>está falando</value>
+    <value>говорит</value>
+  </data>
+  <data name="Start" xml:space="preserve">
+    <value>Начать</value>
   </data>
   <data name="StartNewGame" xml:space="preserve">
-    <value>Começar novo jogo</value>
+    <value>Начать новую игру</value>
+  </data>
+  <data name="UnavailableCharacters" xml:space="preserve">
+    <value>Сброшенные герои</value>
   </data>
   <data name="Welcome" xml:space="preserve">
-    <value>Bem vindo no jogo</value>
+    <value>Добро пожаловать в игру</value>
+  </data>
+  <data name="CharacterName1" xml:space="preserve">
+    <value>Ассасин</value>
+  </data>
+  <data name="CharacterDescription1" xml:space="preserve">
+    <value>Можете назвать персонажа, которого хотите убить. Когда его вызывают, его владелец молчит. Ход убитого персонажа пропускается</value>
+  </data>
+  <data name="CharacterName2" xml:space="preserve">
+    <value>Вор</value>
+  </data>
+  <data name="CharacterDescription2" xml:space="preserve">
+    <value>Можете назвать персонажа, которого хотите обворовать. Когда этого персонажа вызывают, заберите у его владельца всё золото</value>
+  </data>
+  <data name="CharacterName3" xml:space="preserve">
+    <value>Чародей</value>
+  </data>
+  <data name="CharacterDescription3" xml:space="preserve">
+    <value>Можете либо обменять все карты с руки на карты с руки другого игрока, либо вернуть сколько угодно карт с руки под колоду кварталов и взять из неё столько же новых</value>
+  </data>
+  <data name="CharacterName4" xml:space="preserve">
+    <value>Король</value>
+  </data>
+  <data name="CharacterDescription4" xml:space="preserve">
+    <value>Когда вызывают короля, можете тут же взять корону. Получите 1 золотой за каждый ваш дворянский квартал</value>
+  </data>
+  <data name="CharacterName5" xml:space="preserve">
+    <value>Епископ</value>
+  </data>
+  <data name="CharacterDescription5" xml:space="preserve">
+    <value>Кондотьер не может разрушить ваши кварталы. Получите 1 золотой за каждый ваш церковный квартал</value>
+  </data>
+  <data name="CharacterName6" xml:space="preserve">
+    <value>Купец</value>
+  </data>
+  <data name="CharacterDescription6" xml:space="preserve">
+    <value>Получите 1 дополнительный золотой. Получите 1 золотой за каждый ваш торговый квартал</value>
+  </data>
+  <data name="CharacterName7" xml:space="preserve">
+    <value>Зодчий</value>
+  </data>
+  <data name="CharacterDescription7" xml:space="preserve">
+    <value>Возьмите 2 дополнительные карты кварталов из колоды. Можете построить 3 квартала или меньше</value>
+  </data>
+  <data name="CharacterName8" xml:space="preserve">
+    <value>Кондотьер</value>
+  </data>
+  <data name="CharacterDescription8" xml:space="preserve">
+    <value>Можете разрушить 1 квартал по вашему выбору, заплатив в банк на 1 золотой меньше стоимости квартала. Получите 1 золотой за каждый ваш воинский квартал</value>
+  </data>
+  <data name="DraftEnded" xml:space="preserve">
+    <value>Драфт окончин</value>
+  </data>
+  <data name="DraftStarted" xml:space="preserve">
+    <value>Начинаем драфт</value>
+  </data>
+  <data name="OnlyHostCanStart" xml:space="preserve">
+    <value>Начать игру может только организатор</value>
+  </data>
+  <data name="ChoosingCharacter" xml:space="preserve">
+    <value>{0} выбирает героя</value>
   </data>
 </root>

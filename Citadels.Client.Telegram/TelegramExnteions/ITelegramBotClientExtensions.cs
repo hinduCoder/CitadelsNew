@@ -13,8 +13,15 @@ public static class ITelegramBotClientExtensions
     {
         if (messageId.HasValue)
         {
-            return await telegramBotClient.EditMessageTextAsync(chatId, messageId.Value, text, parseMode,
-                replyMarkup: replyMarkup, cancellationToken: cancellationToken);
+            try
+            {
+                return await telegramBotClient.EditMessageTextAsync(chatId, messageId.Value, text, parseMode,
+                    replyMarkup: replyMarkup, cancellationToken: cancellationToken);
+            }
+            catch
+            {
+                return new Message { MessageId = messageId.Value };
+            }
         }
         return await telegramBotClient.SendTextMessageAsync(chatId, text, parseMode,
             replyMarkup: replyMarkup, cancellationToken: cancellationToken);

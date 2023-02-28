@@ -13,43 +13,38 @@ namespace Citadels.Client.Telegram.Commands.Handlers;
 public class InGameChatHandler : ICommandHandler
 {
     private readonly ILogger _logger;
-    private readonly IDbContextFactory<TelegramClientDbContext> _dbContextFactory;
+    private readonly TelegramClientDbContext _dbContext;
     private readonly ITelegramBotClient _botClient;
 
     public InGameChatHandler(ILogger logger,
-        IDbContextFactory<TelegramClientDbContext> dbContextFactory,
+        TelegramClientDbContext dbContext,
         ITelegramBotClient telegramBotClient)
     {
         _logger = logger;
-        _dbContextFactory = dbContextFactory;
+        _dbContext = dbContext;
         _botClient = telegramBotClient;
     }
 
-    public int Order => 0;
-    public bool CanHandle(Update update) => update.Message is not null;
     public async Task Handle(Update update, CancellationToken cancellationToken)
     {
-        using var dbContext = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
-
         var message = update.Message!;
         var sender = message.From!;
 
-        var user = await dbContext.User.FindAsync(sender.Id);
+        var user = await _dbContext.User.FindAsync(sender.Id);
         if (user?.CurrentGame is null)
         {
             return;
         }
 
         var fromUserModel = new UserModel(user.TelegramUserId, user.Name!, false);
-        var targetUsers = await dbContext.User
+        var targetUsers = await _dbContext.User
             .Where(x => x.CurrentGameId == user.CurrentGameId && x.TelegramUserId != user.TelegramUserId)
             .ToListAsync(cancellationToken: cancellationToken);
         foreach (var targetUser in targetUsers)
         {
             await _botClient.SendTextMessageAsync(
                 targetUser.PrivateChatId, 
-                Templates.Templates.InGameChatMessageTemplate(new ChatMessage(
-                    targetUser.LanguageCode, fromUserModel, message.Text)), 
+                Templates.Templates.InGameChatMessageTemplate(new ChatMessage(fromUserModel, message.Text), targetUser.LanguageCode), 
                 ParseMode.Html, cancellationToken: cancellationToken);
         }
 

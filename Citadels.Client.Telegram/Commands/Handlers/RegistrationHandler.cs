@@ -16,28 +16,22 @@ public class RegistrationHandler : ICommandHandler
 {
     private readonly IStringsProvider _stringsProvider;
     private readonly ILogger _logger;
-    private readonly IDbContextFactory<TelegramClientDbContext> _dbContextFactory;
+    private readonly TelegramClientDbContext _dbContext;
     private readonly ITelegramBotClient _botClient;
     private readonly IKeyboardLocalizator _keyboardLocalizator;
 
     public RegistrationHandler(IStringsProvider stringsProvider,
         ILogger logger,
-        IDbContextFactory<TelegramClientDbContext> dbContextFactory,
+        TelegramClientDbContext dbContext,
         ITelegramBotClient telegramBotClient,
         IKeyboardLocalizator keyboardLocalizator)
     {
         _stringsProvider = stringsProvider;
         _logger = logger;
-        _dbContextFactory = dbContextFactory;
+        _dbContext = dbContext;
         _botClient = telegramBotClient;
         _keyboardLocalizator = keyboardLocalizator;
     }
-
-    public bool CanHandle(TelegramTypes.Update update) 
-        => update.Message is { Text: not null, Chat.Type: ChatType.Private } message && message.Text.StartsWith("/start")
-            || update.CallbackQuery is { Data: CallbackData.CancelRegistration } ;
-
-    public int Order => 1;
 
     public async Task Handle(TelegramTypes.Update update, CancellationToken cancellationToken)
     {
@@ -68,51 +62,46 @@ public class RegistrationHandler : ICommandHandler
 
     private async Task HandleGameCreation(TelegramTypes.Message message, CancellationToken cancellationToken)
     {
-        using var dbContext = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
-
-        var user = await GetUpdatedUser(dbContext, message.From!, message.Chat.Id);
+        var user = await GetUpdatedUser(_dbContext, message.From!, message.Chat.Id);
         if (await CheckUserInGame(user, cancellationToken))
         {
             return;
         }
         var game = new Game(user);
         user.CurrentGame = game;
-        dbContext.Add(game);
+        _dbContext.Add(game);
 
         var myUsername = (await _botClient.GetMeAsync(cancellationToken: cancellationToken)).Username;
         var link = $"https://t.me/{myUsername}?start={game.Id}";
 
         await _botClient.SendTextMessageAsync(message.Chat.Id,
-            Templates.Templates.GameInvitation(new(user.LanguageCode, link)),
+            Templates.Templates.GameInvitation(new(link), user.LanguageCode),
             ParseMode.Html, cancellationToken: cancellationToken);
 
         await Print(new[] { user }, user.TelegramUserId, cancellationToken);
 
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
     private async Task HandlerGameJoin(TelegramTypes.Message message, Guid gameId, CancellationToken cancellationToken)
     {
-        using var dbContext = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
-
-        var user = await GetUpdatedUser(dbContext, message.From!, message.Chat.Id);
+        var user = await GetUpdatedUser(_dbContext, message.From!, message.Chat.Id);
         if (await CheckUserInGame(user, cancellationToken))
         {
             return;
         }
-        var game = await dbContext.Game.FindAsync(gameId);
+        var game = await _dbContext.Game.FindAsync(gameId);
         if (game is null)
         {
             await _botClient.SendTextMessageAsync(user.TelegramUserId, _stringsProvider.Get("GameDoesNotExist", user.LanguageCode)!, cancellationToken: cancellationToken);
             return;
         }
 
-        await dbContext.Entry(game).Collection(x => x.Users).LoadAsync(cancellationToken);
+        await _dbContext.Entry(game).Collection(x => x.Users).LoadAsync(cancellationToken);
         await Print(game.Users.Concat(new[] { user }), game.HostUserId, cancellationToken);
         user.CurrentGameId = gameId;
 
-        await dbContext.SaveChangesAsync(cancellationToken);
-
+        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
     private static async Task<User> GetUpdatedUser(TelegramClientDbContext dbContext, TelegramTypes.User sender, long chatId)
@@ -143,9 +132,8 @@ public class RegistrationHandler : ICommandHandler
     private async Task HandleRegistrationCancel(TelegramTypes.CallbackQuery callback, CancellationToken cancellationToken)
     {
         await _botClient.AnswerCallbackQueryAsync(callback.Id);
-        using var dbContext = await _dbContextFactory.CreateDbContextAsync(cancellationToken);
 
-        var callingUser = await dbContext.User.FindAsync(new object?[] { callback.From.Id }, cancellationToken: cancellationToken);
+        var callingUser = await _dbContext.User.FindAsync(new object?[] { callback.From.Id }, cancellationToken: cancellationToken);
         var game = callingUser!.CurrentGame;
 
         if (game is null)
@@ -155,7 +143,7 @@ public class RegistrationHandler : ICommandHandler
 
         if (game.HostUserId == callingUser.TelegramUserId)
         {
-            await dbContext.Entry(game).Collection(x => x.Users).LoadAsync(cancellationToken);
+            await _dbContext.Entry(game).Collection(x => x.Users).LoadAsync(cancellationToken);
             foreach (var user in game.Users)
             {
                 await _botClient.DeleteMessageAsync(user.PrivateChatId, user.UpdatingTelegramMessageId!.Value, cancellationToken);
@@ -163,8 +151,8 @@ public class RegistrationHandler : ICommandHandler
                 user.UpdatingTelegramMessageId = null;
             }
 
-            dbContext.Remove(game);
-            await dbContext.SaveChangesAsync(cancellationToken);
+            _dbContext.Remove(game);
+            await _dbContext.SaveChangesAsync(cancellationToken);
             return;
         }
 
@@ -175,11 +163,11 @@ public class RegistrationHandler : ICommandHandler
             callingUser.UpdatingTelegramMessageId!.Value,
             cancellationToken: cancellationToken);
         callingUser.UpdatingTelegramMessageId = null;
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
-        await dbContext.Entry(game).Collection(x => x.Users).LoadAsync(cancellationToken);
+        await _dbContext.Entry(game).Collection(x => x.Users).LoadAsync(cancellationToken);
         await Print(game.Users, game.HostUserId, cancellationToken);
-        await dbContext.SaveChangesAsync(cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
     }
 
@@ -191,7 +179,7 @@ public class RegistrationHandler : ICommandHandler
         {
             var languageCode = user.LanguageCode;
             var messageText = Templates.Templates.RegistrationTemplate(
-                new RegistrationContext(languageCode, userModels));
+                new (userModels), languageCode);
 
             var rulesButton = _keyboardLocalizator.Localize(
                 InlineKeyboardButton.WithUrl("Rules", _stringsProvider.Get("RulesLink", languageCode)!),
