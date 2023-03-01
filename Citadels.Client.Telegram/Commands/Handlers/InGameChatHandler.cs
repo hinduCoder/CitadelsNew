@@ -40,13 +40,27 @@ public class InGameChatHandler : ICommandHandler
         var targetUsers = await _dbContext.User
             .Where(x => x.CurrentGameId == user.CurrentGameId && x.TelegramUserId != user.TelegramUserId)
             .ToListAsync(cancellationToken: cancellationToken);
-        foreach (var targetUser in targetUsers)
+        await Task.WhenAll(targetUsers.Select(async targetUser =>
         {
+            var messageText = Templates.Templates.InGameChatMessageTemplate(new ChatMessage(fromUserModel, message.Text), targetUser.LanguageCode);
+            var chatId = targetUser.PrivateChatId;
             await _botClient.SendTextMessageAsync(
-                targetUser.PrivateChatId, 
-                Templates.Templates.InGameChatMessageTemplate(new ChatMessage(fromUserModel, message.Text), targetUser.LanguageCode), 
+                chatId,
+                messageText,
                 ParseMode.Html, cancellationToken: cancellationToken);
-        }
+            if (message.Animation is Animation animation)
+            {
+                await _botClient.SendAnimationAsync(chatId, animation.FileId, caption: message.Caption);
+            } 
+            else if (message.Sticker is Sticker sticker)
+            {
+                await _botClient.SendStickerAsync(chatId, sticker.FileId);
+            }
+            else if (message.Photo is [var photo,..])
+            {
+                await _botClient.SendPhotoAsync(chatId, photo.FileId, message.Caption);
+            }
+        }));
 
         return;
     }
