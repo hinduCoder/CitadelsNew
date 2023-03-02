@@ -4,6 +4,7 @@ using Citadels.Core.Events;
 using Grpc.Core;
 
 namespace Citadels.Api.Services;
+
 public class CitadelsService : Citadels.CitadelsBase
 {
     private readonly ILogger<CitadelsService> _logger;
@@ -19,7 +20,7 @@ public class CitadelsService : Citadels.CitadelsBase
         _gameStorage = gameStorage;
     }
 
-    public override Task<NewGameResponse> StartNewGame(NewGameRequest request, ServerCallContext context)
+    public override async Task<NewGameResponse> StartNewGame(NewGameRequest request, ServerCallContext context)
     {
         var newId = request.GameId;
         if (string.IsNullOrEmpty(newId))
@@ -27,23 +28,26 @@ public class CitadelsService : Citadels.CitadelsBase
             newId = Guid.NewGuid().ToString();
         }
 
-        _gameEventHandler.HandleEvent(_gameStorage[newId], new StartGame(request.PlayerNames, (int)(DateTime.Now.Ticks % int.MaxValue)));
-        return Task.FromResult(new NewGameResponse { Id = newId });
+        using var gameAccessor = await _gameStorage.GetAsync(newId, context.CancellationToken);
+        _gameEventHandler.HandleEvent(gameAccessor.Game,
+            new StartGame(request.PlayerNames, (int)(DateTime.Now.Ticks % int.MaxValue)));
+        return new NewGameResponse { Id = newId };
     }
 
-    public override Task<DraftStateResponse> StartDraft(StartDraftRequest request, ServerCallContext context)
+    public override async Task<DraftStateResponse> StartDraft(StartDraftRequest request, ServerCallContext context)
     {
-        Game game = _gameStorage[request.GameId];
-        _gameEventHandler.HandleEvent(game, new StartDraft((int)(DateTime.Now.Ticks % int.MaxValue)));
-        _gameEventHandler.HandleEvent(game, new DiscardDraftFirstCards());
-        return Task.FromResult(MapDraftState(game));
+        using var gameAccessor = await _gameStorage.GetAsync(request.GameId, context.CancellationToken);
+        _gameEventHandler.HandleEvent(gameAccessor.Game, new StartDraft((int)(DateTime.Now.Ticks % int.MaxValue)));
+        _gameEventHandler.HandleEvent(gameAccessor.Game, new DiscardDraftFirstCards());
+        return MapDraftState(gameAccessor.Game);
     }
 
-    public override Task<DraftStateResponse> ChooseCharacter(ChooseCharacterRequest request, ServerCallContext context)
+    public override async Task<DraftStateResponse> ChooseCharacter(ChooseCharacterRequest request,
+        ServerCallContext context)
     {
-        var game = _gameStorage[request.GameId];
-        _gameEventHandler.HandleEvent(game, new ChooseCharacter(request.Rank));
-        return Task.FromResult(MapDraftState(game));
+        using var gameAccessor = await _gameStorage.GetAsync(request.GameId, context.CancellationToken);
+        _gameEventHandler.HandleEvent(gameAccessor.Game, new ChooseCharacter(request.Rank));
+        return MapDraftState(gameAccessor.Game);
     }
 
     private static DraftStateResponse MapDraftState(Game game)
