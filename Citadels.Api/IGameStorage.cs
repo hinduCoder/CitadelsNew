@@ -1,8 +1,10 @@
 ﻿using Citadels.Core;
 
 namespace Citadels.Api;
+
 public interface IGameStorage
 {
-    Game this[Guid id] { get; }
-    Game this[string guid] => Guid.TryParse(guid, out var gameGuid) ? this[gameGuid] : throw new FormatException();
+    Task<IGameAccessor> GetAsync(Guid id, CancellationToken ct = default);
+    Task<IGameAccessor> GetAsync(string guid, CancellationToken ct = default) =>
+        Guid.TryParse(guid, out var gameGuid) ? GetAsync(gameGuid, ct) : throw new FormatException();
 }
