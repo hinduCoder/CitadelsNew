@@ -53,11 +53,11 @@ public class DraftHandler : ICommandHandler
             request.PlayerNames.AddRange(gameUsers.Select(x => x.Name));
             await _api.StartNewGameAsync(request);
 
-            foreach (var user in gameUsers)
+            await Task.WhenAll(gameUsers.Select(async user =>
             {
                 await _telegram.EditMessageReplyMarkupAsync(user.PrivateChatId, user.UpdatingTelegramMessageId!.Value, replyMarkup: null);
                 await _telegram.SendTextMessageAsync(user.PrivateChatId, _stringsProvider.Get("DraftStarted", user.LanguageCode)!);
-            }
+            }));
 
             var state = await _api.StartDraftAsync(new Api.StartDraftRequest { GameId = game.Id.ToString() });
             if (state.InProgress)
@@ -84,10 +84,9 @@ public class DraftHandler : ICommandHandler
             }
             else
             {
-                foreach (var user in gameUsers)
-                {
-                    await _telegram.SendTextMessageAsync(user.PrivateChatId, _stringsProvider.Get("DraftEnded", user.LanguageCode)!);
-                }
+                await Task.WhenAll(gameUsers
+                    .Select(async user => 
+                        await _telegram.SendTextMessageAsync(user.PrivateChatId, _stringsProvider.Get("DraftEnded", user.LanguageCode)!)));   
             }
         }
     }
@@ -105,9 +104,10 @@ public class DraftHandler : ICommandHandler
         await _telegram.SendTextMessageAsync(targetUser.PrivateChatId, text, ParseMode.Html,
             replyMarkup: new InlineKeyboardMarkup(_keyboardLocalizator.Localize(keyboardButtons, targetUser.LanguageCode)));
 
-        foreach (var user in gameUsers.Where(u => u.TelegramUserId != targetUser.TelegramUserId))
-        {
-            await _telegram.SendTextMessageAsync(user.PrivateChatId, _stringsProvider.Get("ChoosingCharacter", user.LanguageCode, targetUser.TelegramLinkMarkdown)!, ParseMode.MarkdownV2);
-        }
+        await Task.WhenAll(gameUsers
+            .Where(u => u.TelegramUserId != targetUser.TelegramUserId)
+            .Select(async user =>
+                await _telegram.SendTextMessageAsync(user.PrivateChatId, _stringsProvider.Get("ChoosingCharacter", user.LanguageCode, targetUser.TelegramLinkMarkdown)!, ParseMode.MarkdownV2)
+        ));
     }
 }
