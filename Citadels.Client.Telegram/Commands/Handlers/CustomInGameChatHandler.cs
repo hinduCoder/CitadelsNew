@@ -1,6 +1,4 @@
 ﻿using Citadels.Client.Telegram.CommandHandlers;
-using Citadels.Client.Telegram.Entities;
-using Citadels.Client.Telegram.Resources;
 using Citadels.Client.Telegram.Templates.Models;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -10,13 +8,13 @@ using Telegram.Bot.Types.Enums;
 
 namespace Citadels.Client.Telegram.Commands.Handlers;
 
-public class InGameChatHandler : ICommandHandler
+public class CustomInGameChatHandler : ICommandHandler
 {
     private readonly ILogger _logger;
     private readonly TelegramClientDbContext _dbContext;
     private readonly ITelegramBotClient _botClient;
 
-    public InGameChatHandler(ILogger logger,
+    public CustomInGameChatHandler(ILogger logger,
         TelegramClientDbContext dbContext,
         ITelegramBotClient telegramBotClient)
     {
@@ -51,17 +49,15 @@ public class InGameChatHandler : ICommandHandler
             if (message.Animation is Animation animation)
             {
                 await _botClient.SendAnimationAsync(chatId, animation.FileId, caption: message.Caption);
-            } 
+            }
             else if (message.Sticker is Sticker sticker)
             {
                 await _botClient.SendStickerAsync(chatId, sticker.FileId);
             }
-            else if (message.Photo is [var photo,..])
+            else if (message.Photo is [var photo, ..])
             {
                 await _botClient.SendPhotoAsync(chatId, photo.FileId, message.Caption);
             }
         }));
-
-        return;
     }
 }
