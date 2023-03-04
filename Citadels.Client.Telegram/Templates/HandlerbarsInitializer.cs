@@ -14,6 +14,7 @@ public class HandlerbarsInitializer
 
     public void Initialize()
     {
+        Handlebars.Configuration.TextEncoder = new HtmlEncoder();
         Handlebars.RegisterHelper("res", ResourcesHelper);
         Handlebars.RegisterHelper("emoji", (writer, _, args) =>
         {

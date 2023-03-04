@@ -144,12 +144,12 @@ public class RegistrationHandler : ICommandHandler
         if (game.HostUserId == callingUser.TelegramUserId)
         {
             await _dbContext.Entry(game).Collection(x => x.Users).LoadAsync(cancellationToken);
-            foreach (var user in game.Users)
+            await Task.WhenAll(game.Users.Select(async user =>
             {
                 await _botClient.DeleteMessageAsync(user.PrivateChatId, user.UpdatingTelegramMessageId!.Value, cancellationToken);
                 await _botClient.SendTextMessageAsync(user.PrivateChatId, _stringsProvider.Get("GameCancelled", user.LanguageCode)!, cancellationToken: cancellationToken);
                 user.UpdatingTelegramMessageId = null;
-            }
+            }));
 
             _dbContext.Remove(game);
             await _dbContext.SaveChangesAsync(cancellationToken);
@@ -175,11 +175,11 @@ public class RegistrationHandler : ICommandHandler
     {
         
         var userModels = users.Select(x => new UserModel(x.TelegramUserId, x.Name ?? x.TelegramUserId.ToString(), x.TelegramUserId == hostId)).ToList();
-        foreach (var user in users)
+        await Task.WhenAll(users.Select(async user =>
         {
             var languageCode = user.LanguageCode;
             var messageText = Templates.Templates.RegistrationTemplate(
-                new (userModels), languageCode);
+                new(userModels), languageCode);
 
             var rulesButton = _keyboardLocalizator.Localize(
                 InlineKeyboardButton.WithUrl("Rules", _stringsProvider.Get("RulesLink", languageCode)!),
@@ -197,6 +197,6 @@ public class RegistrationHandler : ICommandHandler
             var message = await _botClient.SendOrEditMessageAsync(user.PrivateChatId, user.UpdatingTelegramMessageId,
                     messageText, ParseMode.Html, keyboard, cancellationToken);
             user.UpdatingTelegramMessageId = message.MessageId;
-        }
+        }));
     }
 }

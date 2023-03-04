@@ -70,10 +70,12 @@ await botInitializer.SetCommands();
 logger.Information("Bot initialization done");
 logger.Information("Starting listening");
 
+var customChatTemplate = configuration.GetValue<bool>("Settings:CustomInGameChatTemplate");
 var router = new RouterBuilder()
     .Map<RegistrationHandler>(update => update.Message is { Text: not null, Chat.Type: ChatType.Private } message && message.Text.StartsWith("/start") || update.CallbackQuery is { Data: CallbackData.CancelRegistration })
     .Map<DraftHandler>(update => update is { CallbackQuery.Data: not null })
-    .Map<InGameChatHandler>(update => update.Message is not null)
+    .Map<CustomInGameChatHandler>(update => customChatTemplate && update.Message is not null)
+    .Map<StandardInGameChatHandler>(update => !customChatTemplate && update.Message is not null)
     .Build();
 
 var telegramBot = serviceProvider.GetRequiredService<ITelegramBotClient>();
