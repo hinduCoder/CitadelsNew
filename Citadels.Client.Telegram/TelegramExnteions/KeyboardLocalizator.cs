@@ -20,6 +20,10 @@ public class KeyboardLocalizator : IKeyboardLocalizator
             return button;
         }
         button.Text = newText;
+        if (button is InlineKeyboardButton { Url: not null } urlButton && !urlButton.Url.StartsWith("http"))
+        {
+            urlButton.Url = _stringsProvider.Get(urlButton.Url, languageCode);
+        }
         return button;
     }
 }

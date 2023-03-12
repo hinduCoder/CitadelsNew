@@ -1,5 +1,6 @@
 ﻿using Citadels.Client.Telegram.CommandHandlers;
 using Citadels.Client.Telegram.Entities;
+using Citadels.Client.Telegram.KeyboardTemplates;
 using Citadels.Client.Telegram.Resources;
 using Citadels.Client.Telegram.TelegramExnteions;
 using Citadels.Client.Telegram.Templates.Models;
@@ -178,22 +179,10 @@ public class RegistrationHandler : ICommandHandler
         await Task.WhenAll(users.Select(async user =>
         {
             var languageCode = user.LanguageCode;
-            var messageText = Templates.Templates.RegistrationTemplate(
-                new(userModels), languageCode);
+            var messageText = Templates.Templates.RegistrationTemplate(new(userModels), languageCode);
 
-            var rulesButton = _keyboardLocalizator.Localize(
-                InlineKeyboardButton.WithUrl("Rules", _stringsProvider.Get("RulesLink", languageCode)!),
-                languageCode);
-
-            var keyboardButtons =
-            new[]
-            {
-                InlineKeyboardButton.WithCallbackData("Start", "start"),
-                InlineKeyboardButton.WithCallbackData("CancelRegistration", CallbackData.CancelRegistration)
-            };
-            var keyboard = new InlineKeyboardMarkup(_keyboardLocalizator.Localize(keyboardButtons, languageCode)
-                .Concat(new[] { rulesButton }).Chunk(1));
-
+            var keyboard = InlineKeyboardTemplates.RegistrationKeyboard.GetKeyboard(
+                new RegistrationKeyboardState(user.TelegramUserId == hostId), user.LanguageCode, _keyboardLocalizator);
             var message = await _botClient.SendOrEditMessageAsync(user.PrivateChatId, user.UpdatingTelegramMessageId,
                     messageText, ParseMode.Html, keyboard, cancellationToken);
             user.UpdatingTelegramMessageId = message.MessageId;
