@@ -219,4 +219,13 @@
   <data name="ChoosingCharacter" xml:space="preserve">
     <value>{0} is choosing a hero</value>
   </data>
+  <data name="GatherCoins" xml:space="preserve">
+    <value>Take 2 coins</value>
+  </data>
+  <data name="GatherDistrict" xml:space="preserve">
+    <value>Take a district</value>
+  </data>
+  <data name="CancelGame" xml:space="preserve">
+    <value>Cancel the game</value>
+  </data>
 </root>
